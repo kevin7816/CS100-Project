@@ -20,6 +20,7 @@ that an algorithm can learn and adapt on its own using the evolutionary process
  propagation to make decisions based upon inputs. \>
 
 ## What will be the input/output of your project?
+ * This project mainly focuses on teaching AI to play a simple game, so our input would be the game Pong (we will implement it ourselves), and the output would be AI being able to play the game with a low percentage of losing.
 
 # Design Patterns
  * Abstract Factory: The abstract factory will be used to construct and perform operations in the neural network. We will have an abstract class called Neural_Network. That class will construct multiple layers of the neural network. These layers will work together to perform the arithmetic operations behind forward propagation. The abstract class is used to call member layer member functions.
