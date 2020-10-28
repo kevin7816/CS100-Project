@@ -5,12 +5,12 @@
  \<[Hongting(Kevin) Liang](https://github.com/kevin7816)\>
  \<[Tran Nguyen](https://github.com/trannguyen28)\>
 
-# Why is it important or interesting to you?
+## Why is it important or interesting to you?
  This project is interesting because it explores the realm of AI. We find it interesting
 that an algorithm can learn and adapt on its own using the evolutionary process
 
 
-# Languages/Tools/Technologies
+## Languages/Tools/Technologies
 > (This list may change over the course of the project)
  * C++
 
@@ -19,7 +19,7 @@ that an algorithm can learn and adapt on its own using the evolutionary process
  * Neural Network - A Neural Network is a very specific type of graph. It uses a mathematical operation called forward
  propagation to make decisions based upon inputs. \>
 
-# What will be the input/output of your project?
+## What will be the input/output of your project?
 
 # Design Patterns
  * Abstract Factory: The abstract factory will be used to construct and perform operations in the neural network. We will have an abstract class called Neural_Network. That class will construct multiple layers of the neural network. These layers will work together to perform the arithmetic operations behind forward propagation. The abstract class is used to call member layer member functions.
