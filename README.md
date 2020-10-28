@@ -1,10 +1,10 @@
 # AI Learns to Play a Simple Game
 
- > Authors: \[Christopher Vurbenova-Mouri](https://github.com/Quidifer)\
+ > Authors: \<[Christopher Vurbenova](https://github.com/Quidifer)\>
 
 # Why is it important or interesting to you?
 >This project is interesting because it explores the realm of AI. We find it interesting
-that an algorithm can learn and adapt on its own using the evolutionary process.
+that an algorithm can learn and adapt on its own using the evolutionary process.\>
 
 
 #What languages/tools/technologies do you plan to use? (This list may change over the course of the project)
