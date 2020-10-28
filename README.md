@@ -6,11 +6,11 @@
  \<[Tran Nguyen](https://github.com/trannguyen28)\>
 
 # Why is it important or interesting to you?
-> This project is interesting because it explores the realm of AI. We find it interesting
+ This project is interesting because it explores the realm of AI. We find it interesting
 that an algorithm can learn and adapt on its own using the evolutionary process
 
 
-# What languages/tools/technologies do you plan to use? 
+# Languages/Tools/Technologies
 > (This list may change over the course of the project)
  * C++
 
