@@ -10,7 +10,7 @@
 that an algorithm can learn and adapt on its own using the evolutionary process
 
 
-#What languages/tools/technologies do you plan to use? (This list may change over the course of the project)
+# What languages/tools/technologies do you plan to use? (This list may change over the course of the project)
 \> * C++
 
  * SDL2 - SDL2 is a library that gives easy access to a visual interface that will display our game
