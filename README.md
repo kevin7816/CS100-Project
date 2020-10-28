@@ -6,12 +6,12 @@
  \<[Tran Nguyen](https://github.com/trannguyen28)\>
 
 # Why is it important or interesting to you?
-> This project is interesting because it explores the realm of AI. We find it interesting
+ This project is interesting because it explores the realm of AI. We find it interesting
 that an algorithm can learn and adapt on its own using the evolutionary process
 
 
 # What languages/tools/technologies do you plan to use? (This list may change over the course of the project)
-\> * C++
+ * C++
 
  * SDL2 - SDL2 is a library that gives easy access to a visual interface that will display our game
 
@@ -21,7 +21,7 @@ that an algorithm can learn and adapt on its own using the evolutionary process
 # What will be the input/output of your project?
 
 # Design Patterns
->/ * Abstract Factory: The abstract factory will be used to construct and perform operations in the neural network. We will have an abstract class called Neural_Network. That class will construct multiple layers of the neural network. These layers will work together to perform the arithmetic operations behind forward propagation. The abstract class is used to call member layer member functions.
+ * Abstract Factory: The abstract factory will be used to construct and perform operations in the neural network. We will have an abstract class called Neural_Network. That class will construct multiple layers of the neural network. These layers will work together to perform the arithmetic operations behind forward propagation. The abstract class is used to call member layer member functions.
 
  * Observer: The observer design pattern would be used to create pause menus inside the games we make. We would have an object that works as a button that has other objects be dependent off of it. Once the button is clicked, the state of that object will change and all other objects dependent on it will also change in state.
 
