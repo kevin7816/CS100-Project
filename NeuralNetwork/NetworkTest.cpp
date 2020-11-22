@@ -2,8 +2,9 @@
 #include "Matrix.h"
 #include "NeuralNetwork.h"
 #include <iostream>
-
+#include <ctime>
 int main() {
+
     srand(time(0));
     // Layer new_Layer(5,5,5);
     // unsigned rows = 2;
@@ -33,12 +34,26 @@ int main() {
     //     std::cout << solution[i] << ' ';
     // }
 
-    NeuralNetwork nn(10,3,3,7);
-    nn.print_weights();
-    nn.print_activations();
-    nn.print_biases();
-    nn.forward_propagation();
-    nn.print_activations();
+    // NeuralNetwork nn(10,3,3,7);
+    // nn.print_weights();
+    // nn.print_activations();
+    // nn.print_biases();
+    // nn.forward_propagation();
+    // nn.print_activations();
+    unsigned size = 100;
+
+    NeuralNetwork** arr = new NeuralNetwork*[size];
+    for(unsigned i = 0; i < size; ++i) {
+        NeuralNetwork* nn = new NeuralNetwork(10,3,3,40);
+        arr[i] = nn;
+    }
+
+    clock_t start = clock();
+    for(unsigned i = 0; i < size; ++i) {
+        arr[i]->forward_propagation();
+    }
+    clock_t end = clock() - start;
+    std::cout << end << std::endl;
 
 
     return 0;
