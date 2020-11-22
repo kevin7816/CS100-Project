@@ -65,6 +65,11 @@ public:
 
     }
 
+    NeuralNetwork(unsigned inputs, unsigned outputs, unsigned hidden_layers, unsigned hidden_layer_size, NeuralNetwork* nn1, NeuralNetwork* nn2):
+    inputs(inputs),  outputs(outputs), hidden_layer_size(hidden_layer_size) {
+        
+    }
+
     void forward_propagation() {
         for (unsigned index = 1; index < num_layers; ++index) {
             float* solution;
