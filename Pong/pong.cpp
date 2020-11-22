@@ -1,169 +1,36 @@
 #include <iostream>
 #include "SDL2/SDL.h"
+#include "Object.h"
+#include "Player.h"
+#include "Ball.h"
 
 #include <ctime>
 #include <math.h>
 
  int HEIGHT =720;
- int WIDTH = 720;
+ int WIDTH = 1500;
  double SPEED =9.0;
  double PI = 3.14159265358979323846;
-// SDL_Rect l_paddle;
-
-class Object {
-    private:
-        double x;
-        double y;
-    public:
-        object() {
-            x=0.0;
-            y=0.0;
-        }
-        object(double x, double y){
-            this->x=x;
-            this->y=y;
-        }
-};
-
-class Player : public Object {
-    private: 
-        SDL_Rect rect;
-    public: 
-        Player(double x, double y, double h, double w){
-            rect.x=x;
-            rect.y=y;
-            rect.h=h;
-            rect.w=w;
-        }
-        double getH(){
-            return rect.h;
-        } 
-        void setH(double h){
-            rect.h=h;
-        }
-        double getX(){
-            return rect.x;
-        } 
-        void setX(double x){
-            rect.x=x;
-        }
-        double getY(){
-            return rect.y;
-        } 
-        void setY(double y){
-            rect.y=y;
-        }
-        double getW(){
-            return rect.w;
-        } 
-        void setW(double w){
-            rect.w=w;
-        }
-        void show(SDL_Renderer* renderer){
-        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-        SDL_RenderFillRect(renderer, &rect);
-        SDL_RenderPresent(renderer);
-        }
-        SDL_Rect getRect(){
-            return rect;
-        }
-        
-};
-
-class Ball : public Object {
-    private:
-        double speed=16.0;
-        double velX=0;
-        double velY=0;
-        SDL_Rect rect;
-    public:
-        Ball(){
-            rect.x=WIDTH/2;
-            rect.y=HEIGHT;
-            rect.h=16;
-            rect.w=16;
-        }
-        Ball(double x, double y){
-            rect.x=x;
-            rect.y=y;
-            rect.h=16;
-            rect.w=16;
-        }
-        double getH(){
-            return rect.h;
-        } 
-        void setH(double h){
-            rect.h=h;
-        }
-        double getX(){
-            return rect.x;
-        } 
-        void setX(double x){
-            rect.x=x;
-        }
-        double getY(){
-            return rect.y;
-        } 
-        void setY(double y){
-            rect.y=y;
-        }
-        double getW(){
-            return rect.w;
-        } 
-        void setW(double w){
-            rect.w=w;
-        }
-        void setSpeed(double speed){
-            this->speed=speed;
-        }
-        double getSpeed(){
-            return speed;
-        }
-        void setVelX(double x){
-            velX=x;
-        }
-        double getVelX(){
-            return velX;
-        }
-        void setVelY(double y){
-            velY=y;
-        }
-        double getVelY(){
-            return velY;
-        }
-        void show(SDL_Renderer* renderer){
-        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-        SDL_RenderFillRect(renderer, &rect);
-        SDL_RenderPresent(renderer);
-        }
-        SDL_Rect getRect(){
-            return rect;
-        }
-        // bool collison(Player* paddle){
-        //     SDL_Rect r1 = paddle->getRect();
-        //     return SDL_HasIntersection(&rect, &r1);
-        // }
-};
 
 void render(int frameCount, int timerFPS, int lastFrame, SDL_Renderer *renderer, Player* left_paddle, Player* right_paddle, Ball* ball) {
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);     //renders black screen
     SDL_RenderClear(renderer);
 
-    frameCount++;
+    frameCount++;                                   // implements frame cap
     timerFPS = SDL_GetTicks()-lastFrame;
-    if(timerFPS<(1000/60)) {
+    if(timerFPS<(1000/60)) {                        
         SDL_Delay((1000/60)-timerFPS);
     }
-    left_paddle->show(renderer);
+    left_paddle->show(renderer);                    // renders game objects
     right_paddle->show(renderer);
     ball->show(renderer);
 }
 
 void serve(Player* left_paddle, Player* right_paddle, Ball* ball, bool &turn){
-    left_paddle->setY((HEIGHT/2)-(left_paddle->getH())/2);
-    right_paddle->setY(left_paddle->getY());
+    left_paddle->setY((HEIGHT/2)-(left_paddle->getH())/2);              //sets the paddles in place
+    right_paddle->setY(left_paddle->getY()+5);
     if(turn) {
-        ball->setX(left_paddle->getX()+(left_paddle->getW()*4));
+        ball->setX(left_paddle->getX()+(left_paddle->getW()*4));        //serves ball
         ball->setVelX(ball->getSpeed()/2);    
     }
     else{
@@ -179,11 +46,11 @@ void update(Player* left_paddle, Player* right_paddle, Ball* ball, bool &turn){
     SDL_Rect b1 = ball->getRect();
     SDL_Rect lp = left_paddle->getRect();
     SDL_Rect rp = right_paddle->getRect();
-    if(SDL_HasIntersection(&b1, &rp)){
+    if(SDL_HasIntersection(&b1, &rp)){                                                  //checks if ball and paddle interact
         double rel= (right_paddle->getY()+(right_paddle->getH()/2))-(ball->getY()+8);
         double norm = rel/(right_paddle->getH()/2);
         double bounce = norm * (5*PI/12);
-        ball->setVelX((ball->getSpeed()*-1)*cos(bounce));
+        ball->setVelX((ball->getSpeed()*-1)*cos(bounce));                               //sends ball at different angle based on where the ball has hit the paddle
         ball->setVelY((ball->getSpeed())*-sin(bounce));
     }
     if(SDL_HasIntersection(&b1, &lp)){
@@ -193,13 +60,13 @@ void update(Player* left_paddle, Player* right_paddle, Ball* ball, bool &turn){
         ball->setVelX((ball->getSpeed()*1)*cos(bounce));
         ball->setVelY((ball->getSpeed())*-sin(bounce));
     }
-    if(ball->getX()<=0) serve(left_paddle, right_paddle, ball, turn); 
+    if(ball->getX()<=0) serve(left_paddle, right_paddle, ball, turn);                                   //checks to see if ball has reacted the left or right side to score point
     if(ball->getX()+16>=WIDTH) serve(left_paddle, right_paddle, ball, turn);
-    if(ball->getY()<=0 || ball->getY()+16>=HEIGHT) ball->setVelY(ball->getVelY()*-1);
-    ball->setX(ball->getVelX()+ball->getX());
+    if(ball->getY()<=0 || ball->getY()+16>=HEIGHT) ball->setVelY(ball->getVelY()*-1);       //check to see if ball hit top or bottom walls
+    ball->setX(ball->getVelX()+ball->getX());                                               //ball movement;
     ball->setY(ball->getVelY()+ball->getY());
 
-    if(left_paddle->getY()<0) left_paddle->setY(0);
+    if(left_paddle->getY()<0) left_paddle->setY(0);                                                         // adds boundries for left and right paddles
     if(left_paddle->getY() + left_paddle->getH()>HEIGHT) left_paddle->setY(HEIGHT-left_paddle->getH());
     if(right_paddle->getY()<0) right_paddle->setY(0);
     if(right_paddle->getY() + right_paddle->getH()>HEIGHT) right_paddle->setY(HEIGHT-right_paddle->getH());
@@ -208,7 +75,7 @@ void update(Player* left_paddle, Player* right_paddle, Ball* ball, bool &turn){
 void input(bool &running, Player* left_paddle, Player* right_paddle) {
     SDL_Event e;
     const Uint8 *keystates = SDL_GetKeyboardState(NULL);
-    while(SDL_PollEvent(&e)) if(e.type==SDL_QUIT) running = false;
+    while(SDL_PollEvent(&e)) if(e.type==SDL_QUIT) running = false;                          //allows for key inputs
     if(keystates[SDL_SCANCODE_ESCAPE]) running = false;
     if(keystates[SDL_SCANCODE_W]) left_paddle->setY(left_paddle->getY()-SPEED);
     if(keystates[SDL_SCANCODE_S]) left_paddle->setY(left_paddle->getY()+SPEED);
