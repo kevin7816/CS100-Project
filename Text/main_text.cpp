@@ -38,10 +38,11 @@ int main(int argc, char * argv[]) {
     cout << "Press ESCAPE to exit." << endl;
 
     // calling Text class to render a string
-    Text* message = new Text(renderer, "hello world", "pixel.ttf", 100, {255, 255, 255, 255});
-    message->set_text_size(50);
-    message->set_text_pos(5);
-    message->render_text();
+    Text* message = new Text(renderer, "hello world", 50);
+    message->set_text_size(50); // settings related to the text's design needs to be called before create()
+    message->create();
+    message->set_text_pos(0, 0); // settings related to the text's position needs to be called after create()
+    message->show();
 
     // keep window running until ESC is pressed
     bool running = true;
@@ -64,4 +65,4 @@ int main(int argc, char * argv[]) {
     return 0;
 }
 
-//g++ main_text.cpp -Isdl2lib\include -Lsdl2lib\lib -w -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf -lSDL2_image -o test
+//g++ main_text.cpp -Isdl2lib\include -Lsdl2lib\lib -w -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf -o test
