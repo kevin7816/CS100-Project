@@ -56,7 +56,7 @@ void update(Player* left_paddle, Player* right_paddle, Ball* ball, bool &turn){
     SDL_Rect lp = left_paddle->getRect();
     SDL_Rect rp = right_paddle->getRect();
     if(SDL_HasIntersection(&b1, &rp)){                                                  //checks if ball and paddle interact
-        double rel= (right_paddle->getY()+(right_paddle->getH()/2))-(ball->getY()+8);
+        double rel = (right_paddle->getY()+(right_paddle->getH()/2))-(ball->getY()+8);
         double norm = rel/(right_paddle->getH()/2);
         double bounce = norm * (5*PI/12);
         ball->setVelX((ball->getSpeed()*-1)*cos(bounce));                               //sends ball at different angle based on where the ball has hit the paddle
@@ -141,7 +141,7 @@ int main(int argc, char * argv[]) {
     Text* message = new Text("Press ESCAPE to exit", 50);
     message->create_text(renderer);
     message->set_text_pos(300, 0); // settings related to the text's position needs to be called after create()
-    message->show(renderer);       // renders text
+    // message->show(renderer);       // renders text
     gameRend.add(message);
 
     while(running){

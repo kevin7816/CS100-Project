@@ -67,9 +67,9 @@ class Text : public Object {
         }
         void show(SDL_Renderer* renderer) {
             // create text_surface, and text_texture for surface
-            text_surface = TTF_RenderText_Blended(text_font, words, color);
+            text_surface = TTF_RenderText_Solid(text_font, words, color);
             text_texture = SDL_CreateTextureFromSurface(renderer, text_surface);
-            
+
             // display text
             SDL_RenderCopy(renderer, text_texture, NULL, &text_rect);
             SDL_RenderPresent(renderer);
