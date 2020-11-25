@@ -41,7 +41,7 @@ that an algorithm can learn and adapt on its own using the evolutionary process
 
  * The observer *Observer* would observe the user's action which causes objects in the *OptionMenu* to change their states and then notify the concrete observers *DifferentOptions* about the changes. Then, *Train* would take the changes notified to *DifferentOptions* and adjust the neural network's arithmetic operations on how to train the AI based on the user's choices.
 
- * *GameRender* holds a vector of all game objects *Object* and renders them onto the screen.
+ * *GameRender* will be passed all game objects and will render them onto the screen.
 
  * *NetworkHandler* handles the evolutionary process behind Neuroevolution using a vector holding all *NeuralNetwork* objects.
 
