@@ -8,7 +8,7 @@ class Player : public Object {
     private: 
         SDL_Rect rect;
     public: 
-        Player(double x, double y, double h, double w) : Object(this) {
+        Player(double x, double y, double h, double w) {
             rect.x=x;
             rect.y=y;
             rect.h=h;

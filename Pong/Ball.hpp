@@ -12,13 +12,13 @@ class Ball : public Object {
         double velY=0;
         SDL_Rect rect;
     public:
-        Ball() : Object(this) {
+        Ball() {
             rect.x=0;
             rect.y=0;
             rect.h=16;
             rect.w=16;
         }
-        Ball(double x, double y) : Object(this){
+        Ball(double x, double y) {
             rect.x=x;
             rect.y=y;
             rect.h=16;

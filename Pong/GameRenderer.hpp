@@ -7,10 +7,12 @@
 #include <vector>
 
 class GameRenderer {
+    private:
+        std::vector<Object*> gameObjects;
     public:
         GameRenderer() { };
 
-        void render_all(std::vector<Object*> objects, SDL_Renderer *renderer, int frameCount, int timerFPS, int lastFrame){
+        void render_all(SDL_Renderer *renderer, int frameCount, int timerFPS, int lastFrame){
             SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);     //renders black screen
             SDL_RenderClear(renderer);
 
@@ -20,17 +22,16 @@ class GameRenderer {
             SDL_Delay((1000/60)-timerFPS);
             }
 
-            for(unsigned i=0;i< objects.size();i++){
-                objects.at(i)->show(renderer);
+            for(unsigned i=0;i< gameObjects.size();i++){
+                gameObjects.at(i)->show(renderer);
             }
+
+            return;
+        }
+        void add(Object* object) {
+            gameObjects.push_back(object);
+            return;
         }
 };
-
-
-
-
-
-
-
 
 #endif

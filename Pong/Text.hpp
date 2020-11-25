@@ -25,16 +25,16 @@ class Text : public Object {
     public:
         // constructors
         Text(const char* words) 
-            : Object(this), words(words) {};
+            : words(words) {};
 
         Text(const char* words, double size) 
-            : Object(this), words(words), size(size) {};
+            : words(words), size(size) {};
 
         Text(const char* words, const char* font) 
-            : Object(this), words(words), font(font) {};
+            : words(words), font(font) {};
             
         Text(const char* words, const char* font, double size, SDL_Color color) 
-            : Object(this), words(words), font(font), size(size), color(color) {};
+            : words(words), font(font), size(size), color(color) {};
         
         // destructor
         ~Text() {
