@@ -65,9 +65,63 @@ public:
 
     }
 
-    NeuralNetwork(unsigned inputs, unsigned outputs, unsigned hidden_layers, unsigned hidden_layer_size, NeuralNetwork* nn1, NeuralNetwork* nn2):
+    NeuralNetwork(unsigned inputs, unsigned outputs, unsigned hidden_layers, unsigned hidden_layer_size, NeuralNetwork* nn1, NeuralNetwork* nn2, float mutation_rate):
     inputs(inputs),  outputs(outputs), hidden_layer_size(hidden_layer_size) {
-        
+        num_layers = hidden_layers + 2;
+
+        //initializing the weights in the adjacency matrices
+        adjacency_matrices = new float**[num_layers]; //all layers have a adjacency matrix except for input layer
+        for (unsigned index = 0; index < num_layers-1; ++index) {
+            unsigned i_size;
+            unsigned j_size;
+
+            if (index == 0) { //first adjacency_matrix is under the second layer
+                adjacency_matrices[index] = new float*[hidden_layer_size];
+                i_size = hidden_layer_size;
+                j_size = inputs;
+            }
+            else if (index == num_layers-2) { //last adjacency matrix on the output layer
+                adjacency_matrices[index] = new float*[outputs];
+                i_size = outputs;
+                j_size = hidden_layer_size;
+            }
+            else { // hidden layers connected to hidden layers
+                adjacency_matrices[index] = new float*[hidden_layer_size];
+                i_size = hidden_layer_size;
+                j_size = hidden_layer_size;
+            }
+
+            for (unsigned i = 0; i < i_size; ++i) {
+                for (unsigned j = 0; j < j_size; ++j) {
+                    float new_weight = choose(nn1->get_weights()[index][i][j], nn2->get_weights()[index][i][j]);
+                    new_weight = mutate(new_weight, mutation_rate);
+                    adjacency_matrices[index][i][j] = new_weight;
+                }
+            }
+        }
+
+        biases = new float*[num_layers];
+        activations = new float*[num_layers];
+        for (unsigned i = 0; i < num_layers; ++i) {
+            unsigned j_size;
+            if (i==0) { j_size = inputs; }
+            else if (i==num_layers-1) { j_size = hidden_layer_size; }
+            else { j_size = outputs; }
+
+            biases[i] = new float[j_size];
+            activations[i] = new float[j_size];
+            for (unsigned j = 0; j < j_size; ++j) {
+                activations[i][j] = 0;
+                if (i == 0) { //input nodes dont have a bias
+                    biases = 0;
+                }
+                else {
+                    float new_bias = choose(nn1->get_biases()[i][j], nn2->get_biases()[i][j]);
+                    new_bias = mutate(new_bias, mutation_rate);
+                    biases[i][j] = new_bias;
+                }
+            }
+        }
     }
 
     void forward_propagation() {
@@ -89,9 +143,16 @@ public:
 
             for (unsigned i = 0; i < size; ++i) {
                 activations[index][i] += biases[index][i];
-                activations[index][i] = ReLU(activations[index][i]);
+                activations[index][i] = Matrix::ReLU(activations[index][i]);
             }
         }
+    }
+
+    float*** get_weights() {
+        return adjacency_matrices;
+    }
+    float** get_biases() {
+        return biases;
     }
 
     void print_activations() {
@@ -154,6 +215,23 @@ private:
         float f = (float)rand() / RAND_MAX;
         return fMin + f * (fMax - fMin);
     }
+    float choose(float x, float y) {
+        if (fRand(-1,1) > 0) {
+            return x;
+        }
+        return y;
+    }
+
+    float mutate(float x, float mutation_rate) {
+        float identifier = fRand(0,1);
+
+        if (identifier <= mutation_rate) {
+            x += fRand(-1,1);
+        }
+
+        return x;
+
+    }
 
     void init_layer(unsigned index, unsigned rows, unsigned cols) {
         for (unsigned i = 0; i < rows; ++i) {
@@ -176,15 +254,6 @@ private:
             //std::cout << biases[index][i] << " | ";
         }
         //std::cout << "\n";
-    }
-
-    float ReLU(float x) {
-        if (x < 0) {
-            return 0.0;
-        }
-        else {
-            return x;
-        }
     }
 
 

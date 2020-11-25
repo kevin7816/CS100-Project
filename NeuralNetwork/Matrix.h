@@ -24,6 +24,15 @@ public:
         }
         return return_arr;
     }
+
+    static float ReLU(float x) {
+        if (x < 0) {
+            return 0.0;
+        }
+        else {
+            return x;
+        }
+    }
 };
 
 #endif
