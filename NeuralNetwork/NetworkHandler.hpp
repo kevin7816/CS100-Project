@@ -16,6 +16,8 @@ public:
         network_params.hidden_layers = hidden_layers;
         network_params.hidden_layer_size = hidden_layer_size;
     }
+    NetworkHandler(NetworkParams & params, float mutation_rate, unsigned generation_size):
+    NetworkHandler(params.inputs, params.outputs, ) {}
 }
 
 #endif

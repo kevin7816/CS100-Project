@@ -24,6 +24,8 @@ public:
         }
     }
 
+    void set_ball(ball* ball) { this->ball = ball; }
+private:
     void set_5_activations(Player* player, float* activations) {
         activations[0] = normalize(ball->getX(), 32, WIDTH - 32);
         activations[1] = normalize(ball->getY(), 0, HEIGHT);
@@ -40,7 +42,7 @@ public:
         activations[3] = normalize(ball->getVelY(), -BALL_SPEED, BALL_SPEED);
         activations[6] = normalize(player->getY(), 0, HEIGHT);
     }
-private:
+
     template<typename T, typename U, typename V>
     float normalize(T x, U min, V max) {
         return ((float)x - min) / ((float)max - min);
