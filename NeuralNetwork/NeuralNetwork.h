@@ -4,6 +4,18 @@
 #include "Matrix.h"
 #include <iostream>
 
+struct NetworkParams {
+    NetworkParams(unsigned inputs, unsigned outputs, unsigned hidden_layers, unsigned hidden_layer_size):
+    inputs(inputs),  outputs(outputs), hidden_layers(hidden_layers), hidden_layer_size(hidden_layer_size) {}
+
+    NetworkParams(): inputs(0),  outputs(0), hidden_layers(0), hidden_layer_size(0) {}
+
+    unsigned inputs;
+    unsigned outputs;
+    unsigned hidden_layers;
+    unsigned hidden_layer_size;
+};
+
 class NeuralNetwork {
 private:
     unsigned num_layers;
@@ -65,6 +77,8 @@ public:
 
     }
 
+    NeuralNetwork(NetworkParams & params): NeuralNetwork(params.inputs, params.outputs, params.hidden_layers, params.hidden_layer_size) {}
+
     NeuralNetwork(unsigned inputs, unsigned outputs, unsigned hidden_layers, unsigned hidden_layer_size, NeuralNetwork* nn1, NeuralNetwork* nn2, float mutation_rate):
     inputs(inputs),  outputs(outputs), hidden_layer_size(hidden_layer_size) {
         num_layers = hidden_layers + 2;
@@ -76,7 +90,7 @@ public:
             unsigned j_size;
 
             if (index == 0) { //first adjacency_matrix is under the second layer
-                adjacency_matrices[index] = new float*[hidden_layer_size];
+                adjacency_matrices[index] = new float*[inputs];
                 i_size = hidden_layer_size;
                 j_size = inputs;
             }
@@ -92,6 +106,7 @@ public:
             }
 
             for (unsigned i = 0; i < i_size; ++i) {
+                adjacency_matrices[index][i] = new float[j_size];
                 for (unsigned j = 0; j < j_size; ++j) {
                     float new_weight = choose(nn1->get_weights()[index][i][j], nn2->get_weights()[index][i][j]);
                     new_weight = mutate(new_weight, mutation_rate);
@@ -105,15 +120,15 @@ public:
         for (unsigned i = 0; i < num_layers; ++i) {
             unsigned j_size;
             if (i==0) { j_size = inputs; }
-            else if (i==num_layers-1) { j_size = hidden_layer_size; }
-            else { j_size = outputs; }
+            else if (i==num_layers-1) { j_size = outputs; }
+            else { j_size = hidden_layer_size; }
 
             biases[i] = new float[j_size];
             activations[i] = new float[j_size];
             for (unsigned j = 0; j < j_size; ++j) {
                 activations[i][j] = 0;
                 if (i == 0) { //input nodes dont have a bias
-                    biases = 0;
+                    biases[i][j] = 0;
                 }
                 else {
                     float new_bias = choose(nn1->get_biases()[i][j], nn2->get_biases()[i][j]);
@@ -124,20 +139,25 @@ public:
         }
     }
 
+    NeuralNetwork(NetworkParams & params, NeuralNetwork* nn1, NeuralNetwork* nn2, float mutation_rate): NeuralNetwork(params.inputs, params.outputs, params.hidden_layers, params.hidden_layer_size, nn1, nn2, mutation_rate) {}
+
     void forward_propagation() {
         for (unsigned index = 1; index < num_layers; ++index) {
             float* solution;
             unsigned size;
             if (index == 1) { //input layer -> hidden layer
                 size = hidden_layer_size;
+                delete[] activations[index]; //delete before reassigning
                 activations[index] = Matrix::multiply(adjacency_matrices[index-1], activations[index-1], hidden_layer_size, inputs);
             }
             else if (index == num_layers-1) { //hidden layer -> output layer
                 size = outputs;
+                delete[] activations[index];
                 activations[index] = Matrix::multiply(adjacency_matrices[index-1], activations[index-1], outputs, hidden_layer_size);
             }
             else { //hidden layer -> hidden layer
                 size = hidden_layer_size;
+                delete[] activations[index];
                 activations[index] = Matrix::multiply(adjacency_matrices[index-1], activations[index-1], hidden_layer_size, hidden_layer_size);
             }
 
@@ -209,6 +229,31 @@ public:
             std::cout << '\n';
         }
         std::cout << "----------------------------------------------------------------------------------------------------------------------------------------------\n";
+    }
+
+    ~NeuralNetwork() {
+        for (unsigned index = 0; index < num_layers-1; ++index) {
+            unsigned rows = hidden_layer_size;
+            unsigned cols = hidden_layer_size;
+            if (index == 0) {
+                cols = inputs;
+            }
+            if (index == num_layers-2) {
+                rows = outputs;
+            }
+            for (unsigned i = 0; i < rows; ++i) {
+                delete[] adjacency_matrices[index][i];
+            }
+            delete[] adjacency_matrices[index];
+        }
+        delete[] adjacency_matrices;
+
+        for(unsigned i = 0; i < num_layers; ++i) {
+            delete[] biases[i];
+            delete[] activations[i];
+        }
+        delete[] biases;
+        delete[] activations;
     }
 private:
     float fRand(float fMin, float fMax) {
