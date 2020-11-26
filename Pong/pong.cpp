@@ -1,20 +1,21 @@
 #include <iostream>
-#include "sdl2lib/include/SDL2/SDL.h"
-#include "sdl2lib/include/SDL2/SDL_ttf.h"
+#include "SDL2/SDL.h"
+#include "SDL2/SDL_ttf.h"
 #include "Object.hpp"
+#include "Controller.hpp"
 #include "Player.hpp"
+#include "User.hpp"
 #include "Ball.hpp"
 #include "Text.hpp"
 #include "GameRenderer.hpp"
+#include "../NeuralNetwork/Sensor.hpp"
+#include "../NeuralNetwork/AI.hpp"
 
 #include <ctime>
 #include <math.h>
 
+#include "../definitions.hpp"
 
-int HEIGHT = 720;
-int WIDTH = 1280;
-double SPEED =9.0;
-double PI = 3.14159265358979323846;
 
 // this function is GameRenderer class
 // void render(int frameCount, int timerFPS, int lastFrame, SDL_Renderer *renderer, Player* left_paddle, Player* right_paddle, Ball* ball, Text* message) {
@@ -23,7 +24,7 @@ double PI = 3.14159265358979323846;
 
 //     frameCount++;                                   // implements frame cap
 //     timerFPS = SDL_GetTicks()-lastFrame;
-//     if(timerFPS<(1000/60)) {                        
+//     if(timerFPS<(1000/60)) {
 //         SDL_Delay((1000/60)-timerFPS);
 //     }
 //     left_paddle->show(renderer);                    // renders game objects
@@ -38,7 +39,7 @@ void serve(Player* left_paddle, Player* right_paddle, Ball* ball, bool &turn){
     right_paddle->setY(left_paddle->getY()+5);
     if(turn) {
         ball->setX(left_paddle->getX()+(left_paddle->getW()*4));        //serves ball
-        ball->setVelX(ball->getSpeed()/2);    
+        ball->setVelX(ball->getSpeed()/2);
     }
     else{
         ball->setX(right_paddle->getX()+(right_paddle->getW()*4));
@@ -83,21 +84,23 @@ void update(Player* left_paddle, Player* right_paddle, Ball* ball, bool &turn){
     return;
 }
 
-void input(bool &running, Player* left_paddle, Player* right_paddle) {
+void input(bool &running) {
     SDL_Event e;
     const Uint8 *keystates = SDL_GetKeyboardState(NULL);
     while(SDL_PollEvent(&e)) if(e.type==SDL_QUIT) running = false;                          //allows for key inputs
     if(keystates[SDL_SCANCODE_ESCAPE]) running = false;
-    if(keystates[SDL_SCANCODE_W]) left_paddle->setY(left_paddle->getY()-SPEED);
-    if(keystates[SDL_SCANCODE_S]) left_paddle->setY(left_paddle->getY()+SPEED);
-    if(keystates[SDL_SCANCODE_UP]) right_paddle->setY(right_paddle->getY()-SPEED);
-    if(keystates[SDL_SCANCODE_DOWN]) right_paddle->setY(right_paddle->getY()+SPEED);
+    // if(keystates[SDL_SCANCODE_W]) left_paddle->setY(left_paddle->getY()-SPEED);
+    // if(keystates[SDL_SCANCODE_S]) left_paddle->setY(left_paddle->getY()+SPEED);
+    // if(keystates[SDL_SCANCODE_UP]) right_paddle->setY(right_paddle->getY()-SPEED);
+    // if(keystates[SDL_SCANCODE_DOWN]) right_paddle->setY(right_paddle->getY()+SPEED);
 
     return;
 }
 
 
 int main(int argc, char * argv[]) {
+    srand(time(0));
+
     if(SDL_Init(SDL_INIT_VIDEO) != 0) {
         fprintf(stderr, "Could not init SDL: %s\n", SDL_GetError());
         return 1;
@@ -122,9 +125,16 @@ int main(int argc, char * argv[]) {
     int frameCount, timerFPS, lastFrame, fps;
     static int lastTime=0;
 
-    Player* left_paddle = new Player(32,(HEIGHT/2)-(HEIGHT/8),(HEIGHT/4),12);
-    Player* right_paddle = new Player(WIDTH-32,(HEIGHT/2)-(HEIGHT/8),(HEIGHT/4),12);
     Ball* ball = new Ball();
+
+    Controller* left_controller = new User(SDL_SCANCODE_W, SDL_SCANCODE_S);
+    Player* left_paddle = new Player(left_controller, 32,(HEIGHT/2)-(HEIGHT/8),(HEIGHT/4),12);
+
+    NetworkParams params(5,3,10,3);
+    Sensor* sensor = new Sensor(ball);
+    Controller* right_controller = new AI(sensor, params);
+    Player* right_paddle = new Player(right_controller, WIDTH-32,(HEIGHT/2)-(HEIGHT/8),(HEIGHT/4),12);
+
 
     // add created objects to gameObjects vector to render
     gameRend.add(left_paddle);
@@ -136,7 +146,7 @@ int main(int argc, char * argv[]) {
     // l_paddle.x=32; l_paddle.h=HEIGHT/4;
     // l_paddle.y=(HEIGHT/2)-(l_paddle.h/2);
     // l_paddle.w=12;
-    
+
     // render static Text
     Text* message = new Text("Press ESCAPE to exit", 50);
     message->create_text(renderer);
@@ -152,8 +162,10 @@ int main(int argc, char * argv[]) {
             frameCount=0;
         }
         update(left_paddle, right_paddle, ball, turn);
-        input(running, left_paddle, right_paddle);
-        //render(frameCount, timerFPS, lastFrame, renderer, left_paddle, right_paddle, ball, message);        
+        input(running);
+        left_paddle->get_input();
+        right_paddle->get_input();
+        //render(frameCount, timerFPS, lastFrame, renderer, left_paddle, right_paddle, ball, message);
         gameRend.render_all(renderer, frameCount, timerFPS, lastFrame);
     }
 
@@ -164,4 +176,6 @@ int main(int argc, char * argv[]) {
     return 0;
 }
 
-//g++ pong.cpp -Isdl2lib\include -Lsdl2lib\lib -w -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf -o test
+//g++ pong.cpp -Isdl2lib\include -Lsdl2lib\lib -w -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf -o compile/test
+
+//g++ pong.cpp -ISDL2-mingw32\include -L SDL2-mingw32\lib -w -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf -o compile/test

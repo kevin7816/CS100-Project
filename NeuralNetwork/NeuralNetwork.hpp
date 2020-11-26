@@ -1,5 +1,5 @@
-#ifndef __NEURAL_NETWORK_H__
-#define __NEURAL_NETWORK_H__
+#ifndef __NEURAL_NETWORK_HPP__
+#define __NEURAL_NETWORK_HPP__
 
 #include "Matrix.h"
 #include <iostream>
@@ -30,7 +30,8 @@ private:
 
 public:
     //note: at least 1 hidden layer is required;
-    NeuralNetwork(unsigned inputs, unsigned outputs, unsigned hidden_layers, unsigned hidden_layer_size): inputs(inputs),  outputs(outputs), hidden_layer_size(hidden_layer_size) {
+    NeuralNetwork(unsigned inputs, unsigned outputs, unsigned hidden_layers, unsigned hidden_layer_size):
+    inputs(inputs),  outputs(outputs), hidden_layer_size(hidden_layer_size) {
         num_layers = hidden_layers + 2;
 
         //initializing the weights in the adjacency matrices
@@ -139,7 +140,18 @@ public:
         }
     }
 
-    NeuralNetwork(NetworkParams & params, NeuralNetwork* nn1, NeuralNetwork* nn2, float mutation_rate): NeuralNetwork(params.inputs, params.outputs, params.hidden_layers, params.hidden_layer_size, nn1, nn2, mutation_rate) {}
+    NeuralNetwork(NetworkParams & params, NeuralNetwork* nn1, NeuralNetwork* nn2, float mutation_rate):
+    NeuralNetwork(params.inputs, params.outputs, params.hidden_layers, params.hidden_layer_size, nn1, nn2, mutation_rate) {}
+
+    float* get_inputs() {
+        return activations[0];
+    }
+    float* get_outputs() {
+        return activations[num_layers-1];
+    }
+    unsigned num_inputs() {
+        return inputs;
+    }
 
     void forward_propagation() {
         for (unsigned index = 1; index < num_layers; ++index) {

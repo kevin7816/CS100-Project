@@ -3,12 +3,18 @@
 
 #include "sdl2lib/include/SDL2/SDL.h"
 #include "Object.hpp"
+#include "Controller.hpp"
 
 class Player : public Object {
-    private: 
+    private:
         SDL_Rect rect;
-    public: 
-        Player(double x, double y, double h, double w) {
+        Controller* controller;
+    public:
+        void get_input() {
+            controller->move(this);
+        }
+        Player(Controller* controller, double x, double y, double h, double w) {
+            this->controller = controller;
             rect.x=x;
             rect.y=y;
             rect.h=h;
@@ -16,25 +22,25 @@ class Player : public Object {
         }
         double getH(){
             return rect.h;
-        } 
+        }
         void setH(double h){
             rect.h=h;
         }
         double getX(){
             return rect.x;
-        } 
+        }
         void setX(double x){
             rect.x=x;
         }
         double getY(){
             return rect.y;
-        } 
+        }
         void setY(double y){
             rect.y=y;
         }
         double getW(){
             return rect.w;
-        } 
+        }
         void setW(double w){
             rect.w=w;
         }
@@ -46,7 +52,7 @@ class Player : public Object {
         SDL_Rect getRect(){
             return rect;
         }
-        
+
 };
 
 #endif

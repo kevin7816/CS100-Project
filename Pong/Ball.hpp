@@ -4,10 +4,11 @@
 
 #include "sdl2lib/include/SDL2/SDL.h"
 #include "Object.hpp"
+#include "../definitions.hpp"
 
 class Ball : public Object {
     private:
-        double speed=16.0;
+        double speed=BALL_SPEED;
         double velX=0;
         double velY=0;
         SDL_Rect rect;
@@ -26,25 +27,25 @@ class Ball : public Object {
         }
         double getH(){
             return rect.h;
-        } 
+        }
         void setH(double h){
             rect.h=h;
         }
         double getX(){
             return rect.x;
-        } 
+        }
         void setX(double x){
             rect.x=x;
         }
         double getY(){
             return rect.y;
-        } 
+        }
         void setY(double y){
             rect.y=y;
         }
         double getW(){
             return rect.w;
-        } 
+        }
         void setW(double w){
             rect.w=w;
         }

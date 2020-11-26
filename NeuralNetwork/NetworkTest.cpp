@@ -1,6 +1,6 @@
 // #include "Layer.h"
-#include "Matrix.h"
-#include "NeuralNetwork.h"
+#include "Matrix.hpp"
+#include "NeuralNetwork.hpp"
 #include <iostream>
 #include <ctime>
 
