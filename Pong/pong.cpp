@@ -121,7 +121,7 @@ int main(int argc, char * argv[]) {
 
     // Pong Game
     bool running=1;
-    bool turn=1;
+    bool turn=0;
     int frameCount, timerFPS, lastFrame, fps;
     static int lastTime=0;
 
@@ -130,10 +130,11 @@ int main(int argc, char * argv[]) {
     Controller* left_controller = new User(SDL_SCANCODE_W, SDL_SCANCODE_S);
     Player* left_paddle = new Player(left_controller, 32,(HEIGHT/2)-(HEIGHT/8),(HEIGHT/4),12);
 
-    NetworkParams params(5,3,10,3);
+    NetworkParams params(3,3,10,3);
     Sensor* sensor = new Sensor(ball);
     Controller* right_controller = new AI(sensor, params);
     Player* right_paddle = new Player(right_controller, WIDTH-32,(HEIGHT/2)-(HEIGHT/8),(HEIGHT/4),12);
+    right_paddle->randomize_color();
 
 
     // add created objects to gameObjects vector to render

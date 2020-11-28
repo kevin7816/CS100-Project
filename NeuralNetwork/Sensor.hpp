@@ -13,6 +13,9 @@ public:
 
     void set_activations(Player* player, float* activations, unsigned inputs) {
         switch (inputs) {
+            case 3:
+                set_3_activations(player, activations);
+                break;
             case 5:
                 set_5_activations(player, activations);
                 break;
@@ -24,23 +27,33 @@ public:
         }
     }
 
-    void set_ball(ball* ball) { this->ball = ball; }
+    void set_ball(Ball* ball) { this->ball = ball; }
 private:
+    void set_3_activations(Player* player, float* activations) {
+        activations[0] = normalize(ball->getX(), 32, WIDTH - 32);
+        activations[1] = normalize(ball->getY(), 0, HEIGHT);
+        activations[2] = normalize(player->getY(), 0, HEIGHT);
+    }
+
     void set_5_activations(Player* player, float* activations) {
         activations[0] = normalize(ball->getX(), 32, WIDTH - 32);
         activations[1] = normalize(ball->getY(), 0, HEIGHT);
         activations[2] = normalize(ball->getVelX(), -BALL_SPEED + 2, BALL_SPEED - 2);
         activations[3] = normalize(ball->getVelY(), -BALL_SPEED + 2, BALL_SPEED - 2);
-        activations[5] = normalize(player->getY(), 0, HEIGHT);
+        activations[4] = normalize(player->getY(), 0, HEIGHT);
+
+        for (unsigned i = 0; i < 5; ++i) {
+            std::cout << activations[i] << ' ';
+        }
     }
 
     void set_6_activations(Player* player, float* activations) {
         activations[0] = normalize(ball->getX(), 32, WIDTH - 32);
         activations[1] = normalize(ball->getY(), 0, HEIGHT);
         activations[2] = ball->getSpeed();
-        activations[2] = normalize(ball->getVelX(), -BALL_SPEED, BALL_SPEED);
-        activations[3] = normalize(ball->getVelY(), -BALL_SPEED, BALL_SPEED);
-        activations[6] = normalize(player->getY(), 0, HEIGHT);
+        activations[3] = normalize(ball->getVelX(), -BALL_SPEED, BALL_SPEED);
+        activations[4] = normalize(ball->getVelY(), -BALL_SPEED, BALL_SPEED);
+        activations[5] = normalize(player->getY(), 0, HEIGHT);
     }
 
     template<typename T, typename U, typename V>

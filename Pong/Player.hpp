@@ -9,11 +9,16 @@ class Player : public Object {
     private:
         SDL_Rect rect;
         Controller* controller;
+        SDL_Color color;
     public:
         void get_input() {
             controller->move(this);
         }
         Player(Controller* controller, double x, double y, double h, double w) {
+            color.r = 255;
+            color.g = 255;
+            color.b = 255;
+            color.a = 255;
             this->controller = controller;
             rect.x=x;
             rect.y=y;
@@ -45,12 +50,22 @@ class Player : public Object {
             rect.w=w;
         }
         void show(SDL_Renderer* renderer){
-            SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+            SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
             SDL_RenderFillRect(renderer, &rect);
             SDL_RenderPresent(renderer);
         }
+        void randomize_color() {
+            color.r = fRand(0,255);
+            color.g = fRand(0,255);
+            color.b = fRand(0,255);
+        }
         SDL_Rect getRect(){
             return rect;
+        }
+    private:
+        float fRand(float fMin, float fMax) {
+            float f = (float)rand() / RAND_MAX;
+            return fMin + f * (fMax - fMin);
         }
 
 };

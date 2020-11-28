@@ -39,12 +39,12 @@ public:
 
         unsigned index_max = 0;
         for (unsigned i = 0; i < NUM_OUTPUTS; ++i) {
-            std::cout << outputs[i] << ' ';
+            //std::cout << outputs[i] << ' ';
             if (outputs[i] > outputs[index_max]) {
                 index_max = i;
             }
         }
-        std::cout << '\n';
+        //std::cout << '\n';
 
         if (index_max == 0) {
             paddle->setY(paddle->getY()-speed);

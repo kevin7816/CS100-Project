@@ -18,8 +18,8 @@ class GameRenderer {
 
             frameCount++;                                   // implements frame cap
             timerFPS = SDL_GetTicks()-lastFrame;
-            if(timerFPS<(1000/60)) {                        
-            SDL_Delay((1000/60)-timerFPS);
+            if(timerFPS<(1000/60)) {
+                SDL_Delay((1000/60)-timerFPS);
             }
 
             for(unsigned i=0;i< gameObjects.size();i++){
@@ -27,6 +27,12 @@ class GameRenderer {
             }
 
             return;
+        }
+        void render_all(SDL_Renderer * renderer, int frameCount, int timerFPS, int lastFrame, vector<Object*> objects) {
+            render_all(renderer, frameCount, timerFPS, lastFrame);
+            for (unsigned i = 0; i < objects.size(); ++i) {
+                objects.at(i)->show(renderer);
+            }
         }
         void add(Object* object) {
             gameObjects.push_back(object);
