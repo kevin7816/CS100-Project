@@ -1,6 +1,6 @@
 #include <iostream>
-#include "SDL2/SDL.h"
-#include "SDL2/SDL_ttf.h"
+#include "sdl2lib/include/SDL2/SDL.h"
+#include "sdl2lib/include/SDL2/SDL_ttf.h"
 #include "Object.hpp"
 #include "Controller.hpp"
 #include "Player.hpp"

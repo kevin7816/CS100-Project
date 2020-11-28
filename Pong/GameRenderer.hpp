@@ -28,12 +28,12 @@ class GameRenderer {
 
             return;
         }
-        void render_all(SDL_Renderer * renderer, int frameCount, int timerFPS, int lastFrame, vector<Object*> objects) {
-            render_all(renderer, frameCount, timerFPS, lastFrame);
-            for (unsigned i = 0; i < objects.size(); ++i) {
-                objects.at(i)->show(renderer);
-            }
-        }
+        // void render_all(SDL_Renderer * renderer, int frameCount, int timerFPS, int lastFrame, vector<Object*> objects) {
+        //     render_all(renderer, frameCount, timerFPS, lastFrame);
+        //     for (unsigned i = 0; i < objects.size(); ++i) {
+        //         objects.at(i)->show(renderer);
+        //     }
+        // }
         void add(Object* object) {
             gameObjects.push_back(object);
             return;
