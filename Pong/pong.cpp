@@ -1,30 +1,37 @@
 #include <iostream>
-#include "SDL2/SDL.h"
-#include "Object.h"
-#include "Player.h"
-#include "Ball.h"
+#include "sdl2lib/include/SDL2/SDL.h"
+#include "sdl2lib/include/SDL2/SDL_ttf.h"
+#include "Object.hpp"
+#include "Player.hpp"
+#include "Ball.hpp"
+#include "Text.hpp"
+#include "GameRenderer.hpp"
 
 #include <ctime>
 #include <math.h>
 
- int HEIGHT =720;
- int WIDTH = 1500;
- double SPEED =9.0;
- double PI = 3.14159265358979323846;
 
-void render(int frameCount, int timerFPS, int lastFrame, SDL_Renderer *renderer, Player* left_paddle, Player* right_paddle, Ball* ball) {
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);     //renders black screen
-    SDL_RenderClear(renderer);
+int HEIGHT = 720;
+int WIDTH = 1280;
+double SPEED =9.0;
+double PI = 3.14159265358979323846;
 
-    frameCount++;                                   // implements frame cap
-    timerFPS = SDL_GetTicks()-lastFrame;
-    if(timerFPS<(1000/60)) {                        
-        SDL_Delay((1000/60)-timerFPS);
-    }
-    left_paddle->show(renderer);                    // renders game objects
-    right_paddle->show(renderer);
-    ball->show(renderer);
-}
+// this function is GameRenderer class
+// void render(int frameCount, int timerFPS, int lastFrame, SDL_Renderer *renderer, Player* left_paddle, Player* right_paddle, Ball* ball, Text* message) {
+//     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);     //renders black screen
+//     SDL_RenderClear(renderer);
+
+//     frameCount++;                                   // implements frame cap
+//     timerFPS = SDL_GetTicks()-lastFrame;
+//     if(timerFPS<(1000/60)) {                        
+//         SDL_Delay((1000/60)-timerFPS);
+//     }
+//     left_paddle->show(renderer);                    // renders game objects
+//     right_paddle->show(renderer);
+//     ball->show(renderer);
+
+//     return;
+// }
 
 void serve(Player* left_paddle, Player* right_paddle, Ball* ball, bool &turn){
     left_paddle->setY((HEIGHT/2)-(left_paddle->getH())/2);              //sets the paddles in place
@@ -40,6 +47,8 @@ void serve(Player* left_paddle, Player* right_paddle, Ball* ball, bool &turn){
     ball->setVelY(0);
     ball->setY((HEIGHT/2)-8);
     turn=!turn;
+
+    return;
 }
 
 void update(Player* left_paddle, Player* right_paddle, Ball* ball, bool &turn){
@@ -47,7 +56,7 @@ void update(Player* left_paddle, Player* right_paddle, Ball* ball, bool &turn){
     SDL_Rect lp = left_paddle->getRect();
     SDL_Rect rp = right_paddle->getRect();
     if(SDL_HasIntersection(&b1, &rp)){                                                  //checks if ball and paddle interact
-        double rel= (right_paddle->getY()+(right_paddle->getH()/2))-(ball->getY()+8);
+        double rel = (right_paddle->getY()+(right_paddle->getH()/2))-(ball->getY()+8);
         double norm = rel/(right_paddle->getH()/2);
         double bounce = norm * (5*PI/12);
         ball->setVelX((ball->getSpeed()*-1)*cos(bounce));                               //sends ball at different angle based on where the ball has hit the paddle
@@ -70,6 +79,8 @@ void update(Player* left_paddle, Player* right_paddle, Ball* ball, bool &turn){
     if(left_paddle->getY() + left_paddle->getH()>HEIGHT) left_paddle->setY(HEIGHT-left_paddle->getH());
     if(right_paddle->getY()<0) right_paddle->setY(0);
     if(right_paddle->getY() + right_paddle->getH()>HEIGHT) right_paddle->setY(HEIGHT-right_paddle->getH());
+
+    return;
 }
 
 void input(bool &running, Player* left_paddle, Player* right_paddle) {
@@ -81,6 +92,8 @@ void input(bool &running, Player* left_paddle, Player* right_paddle) {
     if(keystates[SDL_SCANCODE_S]) left_paddle->setY(left_paddle->getY()+SPEED);
     if(keystates[SDL_SCANCODE_UP]) right_paddle->setY(right_paddle->getY()-SPEED);
     if(keystates[SDL_SCANCODE_DOWN]) right_paddle->setY(right_paddle->getY()+SPEED);
+
+    return;
 }
 
 
@@ -99,6 +112,11 @@ int main(int argc, char * argv[]) {
         fprintf(stderr, "Could not create renderer\n");
         return 1;
     }
+
+    // create GameRenderer
+    GameRenderer gameRend;
+
+    // Pong Game
     bool running=1;
     bool turn=1;
     int frameCount, timerFPS, lastFrame, fps;
@@ -108,11 +126,23 @@ int main(int argc, char * argv[]) {
     Player* right_paddle = new Player(WIDTH-32,(HEIGHT/2)-(HEIGHT/8),(HEIGHT/4),12);
     Ball* ball = new Ball();
 
+    // add created objects to gameObjects vector to render
+    gameRend.add(left_paddle);
+    gameRend.add(right_paddle);
+    gameRend.add(ball);
+
     serve(left_paddle, right_paddle, ball, turn);
 
     // l_paddle.x=32; l_paddle.h=HEIGHT/4;
     // l_paddle.y=(HEIGHT/2)-(l_paddle.h/2);
     // l_paddle.w=12;
+    
+    // render static Text
+    Text* message = new Text("Press ESCAPE to exit", 50);
+    message->create_text(renderer);
+    message->set_text_pos(300, 0); // settings related to the text's position needs to be called after create()
+    // message->show(renderer);       // renders text
+    gameRend.add(message);
 
     while(running){
         lastFrame=SDL_GetTicks();
@@ -123,14 +153,15 @@ int main(int argc, char * argv[]) {
         }
         update(left_paddle, right_paddle, ball, turn);
         input(running, left_paddle, right_paddle);
-        render(frameCount, timerFPS, lastFrame, renderer, left_paddle, right_paddle, ball);
+        //render(frameCount, timerFPS, lastFrame, renderer, left_paddle, right_paddle, ball, message);        
+        gameRend.render_all(renderer, frameCount, timerFPS, lastFrame);
     }
+
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
 
+    return 0;
 }
 
-
-
-
+//g++ pong.cpp -Isdl2lib\include -Lsdl2lib\lib -w -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf -o test
