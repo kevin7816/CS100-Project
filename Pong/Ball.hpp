@@ -70,7 +70,7 @@ class Ball : public Object {
         void show(SDL_Renderer* renderer){
             SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
             SDL_RenderFillRect(renderer, &rect);
-            SDL_RenderPresent(renderer);
+            // SDL_RenderPresent(renderer);
         }
         SDL_Rect getRect(){
             return rect;

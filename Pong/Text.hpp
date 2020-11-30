@@ -72,7 +72,7 @@ class Text : public Object {
 
             // display text
             SDL_RenderCopy(renderer, text_texture, NULL, &text_rect);
-            SDL_RenderPresent(renderer);
+            // SDL_RenderPresent(renderer);
 
             return;
         }

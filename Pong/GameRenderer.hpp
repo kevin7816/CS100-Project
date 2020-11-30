@@ -16,14 +16,15 @@ class GameRenderer {
             SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);     //renders black screen
             SDL_RenderClear(renderer);
 
+            for(unsigned i=0;i< gameObjects.size();i++){
+                gameObjects.at(i)->show(renderer);
+            }
+            SDL_RenderPresent(renderer);                    // update screen all at once to prevent flickering
+
             frameCount++;                                   // implements frame cap
             timerFPS = SDL_GetTicks()-lastFrame;
             if(timerFPS<(1000/60)) {
-                SDL_Delay((1000/60)-timerFPS);
-            }
-
-            for(unsigned i=0;i< gameObjects.size();i++){
-                gameObjects.at(i)->show(renderer);
+                SDL_Delay((1000/60)-timerFPS);              // SDL_Delay() should go after SDL_RenderPresent() for for smoother moves
             }
 
             return;
