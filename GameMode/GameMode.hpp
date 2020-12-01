@@ -17,8 +17,8 @@ class GameMode {
         virtual void run_game(SDL_Renderer* renderer) = 0;
 
     private:
-        virtual void serve(bool &turn) = 0;
-        virtual void update(bool &turn) = 0;
+        // virtual void serve(bool &turn) = 0;
+        // virtual void update(bool &turn) = 0;
         virtual void input(bool &running) = 0;
 };
 

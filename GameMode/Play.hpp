@@ -32,12 +32,12 @@ class Play : public GameMode {
         void setup(SDL_Renderer* renderer) {
             // set up left user player
             left_controller = new User(SDL_SCANCODE_W, SDL_SCANCODE_S);
-            left_paddle = new Player(left_controller, 32,(HEIGHT/2)-(HEIGHT/8),(HEIGHT/4),12);
+            left_paddle = new Player(left_controller, 32, (HEIGHT/2)-(HEIGHT/8), (HEIGHT/4), 12);
             left_paddle->randomize_color();
 
             // set up right user player
             right_controller = new User(SDL_SCANCODE_UP, SDL_SCANCODE_DOWN);
-            right_paddle = new Player(right_controller, WIDTH-32,(HEIGHT/2)-(HEIGHT/8),(HEIGHT/4),12);
+            right_paddle = new Player(right_controller, WIDTH-32, (HEIGHT/2)-(HEIGHT/8), (HEIGHT/4), 12);
             right_paddle->randomize_color();
 
             // set up ball
@@ -59,12 +59,14 @@ class Play : public GameMode {
 
         // render all objects on screen and run the game
         void run_game(SDL_Renderer* renderer) {
+            int score_left = 0, score_right = 0;
+
             bool running = 1;
-            bool turn = 0;
+            bool turn = 0; // turn is 1 or 0 == player 1'turn or player 2's turn
             int frameCount, timerFPS, lastFrame, fps;
             static int lastTime = 0;
 
-            serve(turn);
+            serve(turn, score_left, score_right);
 
             while(running){
                 lastFrame = SDL_GetTicks();
@@ -73,7 +75,7 @@ class Play : public GameMode {
                     fps = frameCount;
                     frameCount = 0;
                 }
-                update(turn);
+                update(turn, score_left, score_right);
                 input(running);
                 left_paddle->get_input();
                 right_paddle->get_input();
@@ -84,51 +86,68 @@ class Play : public GameMode {
         }
 
     private:
-        void serve(bool &turn){
-            left_paddle->setY((HEIGHT/2)-(left_paddle->getH())/2);              //sets the paddles in place
-            right_paddle->setY(left_paddle->getY()+5);
-            if(turn) {
-                ball->setX(left_paddle->getX()+(left_paddle->getW()*4));        //serves ball
+        void serve(bool &turn, int &score_left, int &score_right){
+            // cout scores in a new serve
+            cout << "Player LEFT: " << score_left << endl;
+            cout << "Player RIGHT: " << score_right << endl << endl;
+
+            if(turn) { // turn == 1 == left's turn to serve
+                left_paddle->setY((HEIGHT/2) - (left_paddle->getH())/2); //sets the paddles in place
+                right_paddle->setY(left_paddle->getY()+5); // right paddle will be a bit off
+                ball->setX(left_paddle->getX() + (left_paddle->getW()*4)); //serves ball
                 ball->setVelX(ball->getSpeed()/2);
             }
-            else{
-                ball->setX(right_paddle->getX()+(right_paddle->getW()*4));
+            else {  // turn == 0 == right's turn to serve
+                right_paddle->setY((HEIGHT/2) - (right_paddle->getH())/2); //sets the paddles in place
+                left_paddle->setY(right_paddle->getY()+5); // left paddle will be a bit off
+                ball->setX(right_paddle->getX() - (right_paddle->getW()*4)); //serves ball
                 ball->setVelX(ball->getSpeed()/-2);
             }
             ball->setVelY(0);
             ball->setY((HEIGHT/2)-8);
-            turn=!turn;
+            turn =! turn; // change turn
 
             return;
         }
 
-        void update(bool &turn){
+        void update(bool &turn, int &score_left, int &score_right){
             SDL_Rect b1 = ball->getRect();
             SDL_Rect lp = left_paddle->getRect();
-            SDL_Rect rp = right_paddle->getRect();
-            if(SDL_HasIntersection(&b1, &rp)){                                                  //checks if ball and paddle interact
+            SDL_Rect rp = right_paddle->getRect();            
+
+            if(SDL_HasIntersection(&b1, &rp)){ //checks if ball and RIGHT paddle interact
                 double rel = (right_paddle->getY()+(right_paddle->getH()/2))-(ball->getY()+8);
                 double norm = rel/(right_paddle->getH()/2);
                 double bounce = norm * (5*PI/12);
-                ball->setVelX((ball->getSpeed()*-1)*cos(bounce));                               //sends ball at different angle based on where the ball has hit the paddle
+                ball->setVelX((ball->getSpeed()*-1)*cos(bounce)); //sends ball at different angle based on where the ball has hit the paddle
                 ball->setVelY((ball->getSpeed())*-sin(bounce));
             }
-            if(SDL_HasIntersection(&b1, &lp)){
-                double rel= (left_paddle->getY()+(left_paddle->getH()/2))-(ball->getY()+8);
+            if(SDL_HasIntersection(&b1, &lp)){ //checks if ball and LEFT paddle interact
+                double rel = (left_paddle->getY()+(left_paddle->getH()/2))-(ball->getY()+8);
                 double norm = rel/(left_paddle->getH()/2);
                 double bounce = norm * (5*PI/12);
-                ball->setVelX((ball->getSpeed()*1)*cos(bounce));
+                ball->setVelX((ball->getSpeed()*1)*cos(bounce)); //sends ball at different angle based on where the ball has hit the paddle
                 ball->setVelY((ball->getSpeed())*-sin(bounce));
             }
-            if(ball->getX()<=0) serve(turn);                                   //checks to see if ball has reacted the left or right side to score point
-            if(ball->getX()+16>=WIDTH) serve(turn);
-            if(ball->getY()<=0 || ball->getY()+16>=HEIGHT) ball->setVelY(ball->getVelY()*-1);       //check to see if ball hit top or bottom walls
-            ball->setX(ball->getVelX()+ball->getX());                                               //ball movement;
-            ball->setY(ball->getVelY()+ball->getY());
+            
+            //checks to see if ball has reacted the left or right side to score point
+            if(ball->getX() <= 0) {
+                // turn = 0; // change turn
+                score_right++;
+                serve(turn, score_left, score_right); 
+            }
+            if(ball->getX() -16 >= WIDTH) {
+                // turn = 1; // change turn
+                score_left++;
+                serve(turn, score_left, score_right);
+            }
+            if(ball->getY() <= 0 || ball->getY() + 16 >= HEIGHT) ball->setVelY(ball->getVelY()*-1); //check to see if ball hit top or bottom walls
+            ball->setX(ball->getVelX() + ball->getX()); //ball movement
+            ball->setY(ball->getVelY() + ball->getY());
 
-            if(left_paddle->getY()<0) left_paddle->setY(0);                                                         // adds boundries for left and right paddles
+            if(left_paddle->getY() < 0) left_paddle->setY(0);                                                         // adds boundries for left and right paddles
             if(left_paddle->getY() + left_paddle->getH()>HEIGHT) left_paddle->setY(HEIGHT-left_paddle->getH());
-            if(right_paddle->getY()<0) right_paddle->setY(0);
+            if(right_paddle->getY() < 0) right_paddle->setY(0);
             if(right_paddle->getY() + right_paddle->getH()>HEIGHT) right_paddle->setY(HEIGHT-right_paddle->getH());
 
             return;
