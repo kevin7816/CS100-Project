@@ -19,11 +19,13 @@
 class Play : public GameMode {
     private:
         GameRenderer gameRend;
-        Controller* left_controller;
-        Player* left_paddle;
-        Controller* right_controller;
-        Player* right_paddle;
-        Ball* ball;
+        Controller* left_controller = nullptr;
+        Player* left_paddle = nullptr;
+        Controller* right_controller = nullptr;
+        Player* right_paddle = nullptr;
+        Ball* ball = nullptr;
+        Text* score_l = nullptr;
+        Text* score_r = nullptr;
 
     public:
         Play() : GameMode() {}
@@ -44,15 +46,21 @@ class Play : public GameMode {
             ball = new Ball();
 
             // set up texts 
-            Text* message = new Text("Press ESCAPE to exit", 50);
-            message->create_text(renderer);
-            message->set_text_pos(300, 0); // settings related to the text's position needs to be called after create()
+            // Text* message = new Text("Press ESCAPE to exit", 50);
+            // message->create_text(renderer);
+            // message->set_text_pos(300, 0); // settings related to the text's position needs to be called after create()
+
+            // // string str = "23";
+            // char const* const num = to_string(23).c_str();
+            // Text* score_r = new Text(to_string(23).c_str());
+            // score_r->create_text(renderer);
+            // score_r->set_text_pos(100, 0); // settings related to the text's position needs to be called after create()
 
             // add all created game objects to gameRend for rendering
             gameRend.add(left_paddle);
             gameRend.add(right_paddle);
             gameRend.add(ball);
-            gameRend.add(message);
+            // gameRend.add(score_r);
 
             return;
         }
@@ -75,10 +83,30 @@ class Play : public GameMode {
                     fps = frameCount;
                     frameCount = 0;
                 }
-                update(turn, score_left, score_right);
+                update(renderer, turn, score_left, score_right);
                 input(running);
                 left_paddle->get_input();
                 right_paddle->get_input();
+
+                // for(unsigned i = 0; i < gameRend.gameObjects.size(); i++){
+                //     if (dynamic_cast<Text*>(gameRend.gameObjects.at(i))) {
+                //         // std::cout << dynamic_cast<Text*>(gameRend.gameObjects.at(i))->words << std::endl;
+                //         gameRend.gameObjects.at(i) = dynamic_cast<Text*>(gameRend.gameObjects.at(i));
+                //     }
+                // }
+
+                // string str = "23";
+                // char const* const num = to_string(23).c_str();
+                // Text* score_r = new Text(num);
+
+                // gameRend.add(score_r);
+                // gameRend.add(score_l);
+
+                // if (score_l && score_r) {
+                //     std::cout << "while l: " << score_l->words << std::endl;
+                //     std::cout << "while r: " << score_r->words << std::endl;
+                // }
+                
                 gameRend.render_all(renderer, frameCount, timerFPS, lastFrame);
             }
 
@@ -86,10 +114,14 @@ class Play : public GameMode {
         }
 
     private:
-        void serve(bool &turn, int &score_left, int &score_right){
+        void serve(bool &turn, const int &score_left, const int &score_right){
             // cout scores in a new serve
             cout << "Player LEFT: " << score_left << endl;
             cout << "Player RIGHT: " << score_right << endl << endl;
+            if (score_l && score_r) {
+                std::cout << "serve l: " << score_l->words << std::endl;
+                std::cout << "serve r: " << score_r->words << std::endl;
+            }
 
             if(turn) { // turn == 1 == left's turn to serve
                 left_paddle->setY((HEIGHT/2) - (left_paddle->getH())/2); //sets the paddles in place
@@ -110,7 +142,7 @@ class Play : public GameMode {
             return;
         }
 
-        void update(bool &turn, int &score_left, int &score_right){
+        void update(SDL_Renderer* renderer, bool &turn, int &score_left, int &score_right){
             SDL_Rect b1 = ball->getRect();
             SDL_Rect lp = left_paddle->getRect();
             SDL_Rect rp = right_paddle->getRect();            
@@ -130,17 +162,6 @@ class Play : public GameMode {
                 ball->setVelY((ball->getSpeed())*-sin(bounce));
             }
             
-            //checks to see if ball has reacted the left or right side to score point
-            if(ball->getX() <= 0) {
-                // turn = 0; // change turn
-                score_right++;
-                serve(turn, score_left, score_right); 
-            }
-            if(ball->getX() -16 >= WIDTH) {
-                // turn = 1; // change turn
-                score_left++;
-                serve(turn, score_left, score_right);
-            }
             if(ball->getY() <= 0 || ball->getY() + 16 >= HEIGHT) ball->setVelY(ball->getVelY()*-1); //check to see if ball hit top or bottom walls
             ball->setX(ball->getVelX() + ball->getX()); //ball movement
             ball->setY(ball->getVelY() + ball->getY());
@@ -150,15 +171,50 @@ class Play : public GameMode {
             if(right_paddle->getY() < 0) right_paddle->setY(0);
             if(right_paddle->getY() + right_paddle->getH()>HEIGHT) right_paddle->setY(HEIGHT-right_paddle->getH());
 
+            //checks to see if ball has reacted the left or right side to score point
+            if(ball->getX() <= 0) {
+                // turn = 0; // change turn
+                score_right++;
+
+                gameRend.remove(score_r);
+                delete score_r;
+                // score_r = new Text(to_string(score_right).c_str(), 50);
+                score_r = new Text(score_right);
+                std::cout << "update r: " << score_r->words << std::endl;
+                score_r->set_text_size(50 - score_right);
+                score_r->create_text(renderer);
+                score_r->set_text_pos(500, 0); // settings related to the text's position needs to be called after create()
+                gameRend.add(score_r);
+
+                serve(turn, score_left, score_right);
+            }
+            if(ball->getX() -16 >= WIDTH) {
+                // turn = 1; // change turn
+                score_left++;
+
+                gameRend.remove(score_l);
+                delete score_l;
+                score_l = new Text(to_string(score_left).c_str(), 50);
+                std::cout << "update l: " << score_l->words << std::endl;
+                score_l->set_text_size(50 - score_left);
+                score_l->create_text(renderer);
+                score_l->set_text_pos(100, 0); // settings related to the text's position needs to be called after create()
+                gameRend.add(score_l);
+
+                serve(turn, score_left, score_right);
+            }
+
             return;
         }
 
         void input(bool &running) {
             SDL_Event e;
             const Uint8 *keystates = SDL_GetKeyboardState(NULL);
-            while (SDL_PollEvent(&e)) if(e.type==SDL_QUIT) running = false;                          //allows for key inputs
-            if(keystates[SDL_SCANCODE_ESCAPE]) running = false;
-
+            while (SDL_PollEvent(&e)) { //allows for key inputs
+                if(e.type==SDL_QUIT) running = false;
+                if(keystates[SDL_SCANCODE_ESCAPE]) running = false;
+            }                          
+        
             return;
         }
 };
