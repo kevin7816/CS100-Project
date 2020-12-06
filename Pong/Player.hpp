@@ -10,6 +10,9 @@ class Player : public Object {
         SDL_Rect rect;
         Controller* controller;
         SDL_Color color;
+
+        unsigned fitness;
+        unsigned previousY;
     public:
         void get_input() {
             controller->move(this);
@@ -24,6 +27,29 @@ class Player : public Object {
             rect.y=y;
             rect.h=h;
             rect.w=w;
+
+            fitness = 0;
+            previousY = rect.y;
+        }
+        ~Player() {
+            delete controller;
+        }
+
+        double get_previousY() {
+            return previousY;
+        }
+        void set_previousY(double x) {
+            previousY = x;
+        }
+        unsigned get_fitness() {
+            return fitness;
+        }
+        void increment_fittness() {
+            ++fitness;
+        }
+
+        Controller* getController() {
+            return controller;
         }
         double getH(){
             return rect.h;

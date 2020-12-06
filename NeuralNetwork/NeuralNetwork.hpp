@@ -85,6 +85,7 @@ public:
         num_layers = hidden_layers + 2;
 
         //initializing the weights in the adjacency matrices
+        //cout << "weights" << endl;
         adjacency_matrices = new float**[num_layers]; //all layers have a adjacency matrix except for input layer
         for (unsigned index = 0; index < num_layers-1; ++index) {
             unsigned i_size;
@@ -115,6 +116,7 @@ public:
                 }
             }
         }
+        //cout << "finsihed" << endl;
 
         biases = new float*[num_layers];
         activations = new float*[num_layers];
@@ -142,6 +144,43 @@ public:
 
     NeuralNetwork(NetworkParams & params, NeuralNetwork* nn1, NeuralNetwork* nn2, float mutation_rate):
     NeuralNetwork(params.inputs, params.outputs, params.hidden_layers, params.hidden_layer_size, nn1, nn2, mutation_rate) {}
+
+    NeuralNetwork(NeuralNetwork* nn, NetworkParams & params): NeuralNetwork(params.inputs, params.outputs, params.hidden_layers, params.hidden_layer_size) {
+        //copy biases
+        //nn->print_biases();
+        // std::cout << "saving weights + biases" << std::endl;
+        for(unsigned i = 0; i < num_layers; ++i) {
+            unsigned size = hidden_layer_size;
+            if ( i == 0) {
+                size = inputs;
+            }
+            else if (i == num_layers-1) {
+                size = outputs;
+            }
+            for (unsigned j = 0; j < size; ++j) {
+                biases[i][j] = nn->get_biases()[i][j];
+            }
+        }
+
+        //copy weights
+        for (unsigned index = 0; index < num_layers-1; ++index) {
+            unsigned rows = hidden_layer_size;
+            unsigned cols = hidden_layer_size;
+            if (index == 0) {
+                cols = inputs;
+            }
+            if (index == num_layers-2) {
+                rows = outputs;
+            }
+            for (unsigned i = 0; i < rows; ++i) {
+                for (unsigned j = 0; j < cols; ++j) {
+                    adjacency_matrices[index][i][j] = nn->get_weights()[index][i][j];
+                }
+            }
+        }
+
+        //std::cout << "done" << std::endl;
+    }
 
     float* get_inputs() {
         return activations[0];
@@ -185,6 +224,10 @@ public:
     }
     float** get_biases() {
         return biases;
+    }
+    NetworkParams get_params() {
+        NetworkParams params(inputs, outputs, num_layers-2, hidden_layer_size);
+        return params;
     }
 
     void print_activations() {
@@ -244,6 +287,7 @@ public:
     }
 
     ~NeuralNetwork() {
+        //std::cout << "destructor called" << std::endl;
         for (unsigned index = 0; index < num_layers-1; ++index) {
             unsigned rows = hidden_layer_size;
             unsigned cols = hidden_layer_size;
@@ -312,7 +356,6 @@ private:
         }
         //std::cout << "\n";
     }
-
 
 };
 

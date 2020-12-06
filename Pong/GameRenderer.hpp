@@ -33,6 +33,7 @@ class GameRenderer {
             for (unsigned i = 0; i < objects.size(); ++i) {
                 objects.at(i)->show(renderer);
             }
+            objects.clear();
         }
         void add(Object* object) {
             gameObjects.push_back(object);

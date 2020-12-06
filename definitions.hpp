@@ -9,6 +9,9 @@ int WIDTH = 1280;
 double SPEED = 9.0;
 double PI = 3.14159265358979323846;
 
-double BALL_SPEED = 16.0;
+double BALL_SPEED = 10.0;
+
+unsigned NUM_FITTEST = 10;
+unsigned NUM_RENDERED_AIS = 5;
 
 #endif

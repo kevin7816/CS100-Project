@@ -5,6 +5,7 @@
 #include "../definitions.hpp"
 
 class Player;
+class NeuralNetwork;
 
 class Controller {
 protected:
@@ -15,5 +16,10 @@ public:
     Controller(): speed(SPEED) {}
 
     virtual void move(Player*) = 0;
+
+    virtual ~Controller() {}
+
+    virtual NeuralNetwork* getNetwork() { return nullptr; }
+    virtual float get_fitness() { return -1; }
 };
 #endif
