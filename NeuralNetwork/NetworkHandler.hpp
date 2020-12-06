@@ -63,11 +63,11 @@ public:
     }
 
     void update() {
-        //cout << "input" << endl;
         for (unsigned i = 0; i < generation_size; ++i) {
             if (players[i] && balls[i]) {
-                //cout << "input" << endl;
+                //cout << "input " << i << endl;
                 players[i]->get_input();
+                //cout << "got input" << endl;
                 update(players[i], balls[i]);
             }
         }
@@ -85,7 +85,7 @@ public:
             for (unsigned i = 0; i < NUM_RENDERED_AIS; ++i) { //only render the first 5 players
                 rendered_indices.push_back(i);
             }
-            //cout << "breeding a new generation" << endl;
+            cout << "breeding a new generation" << endl;
             serve();
         }
     }
@@ -160,13 +160,14 @@ private:
 
     void kill(Player* paddle, Ball* ball) {
         float fitness = paddle->get_fitness() + paddle->getController()->get_fitness();
-        if (best_networks.size() <= NUM_FITTEST) {
+        if (best_networks.size() < NUM_FITTEST) {
             NeuralNetwork* nn = new NeuralNetwork((paddle->getController()->getNetwork()), network_params);
             best_networks.push_back(make_pair(nn, fitness));
         }
         else {
             for (unsigned i = 0; i < best_networks.size(); ++i) {
                 if (best_networks.at(i).second <= fitness) {
+                    cout << best_networks.size() << endl;
                     cout << fitness << " saving network" << endl;
                     NeuralNetwork* nn = new NeuralNetwork((paddle->getController()->getNetwork()), network_params);
 
@@ -215,6 +216,11 @@ private:
     }
 
     void breed_new_generation() {
+        // for (unsigned i = 0; i < best_networks.size(); ++i) {
+        //     best_networks.at(i).first->forward_propagation();
+        // }
+
+        cout << best_networks.size() << endl;
         ++num_generations;
         balls = new Ball*[generation_size];
         players = new Player*[generation_size];
@@ -228,6 +234,7 @@ private:
                 unsigned mom_index = fRand(0, best_networks.size()-1);
 
                 AI* child = new AI(new Sensor(balls[i]), network_params, best_networks.at(dad_index).first, best_networks.at(mom_index).first, mutation_rate);
+                child->getNetwork()->forward_propagation();
                 players[i] = new Player(child, 32,(HEIGHT/2)-(HEIGHT/8),(HEIGHT/HEIGHT_RATIO),12);
             }
             players[i]->randomize_color();

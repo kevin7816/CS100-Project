@@ -17,6 +17,11 @@
 
 #include "../definitions.hpp"
 
+// float fRand(float fMin, float fMax) {
+//     float f = (float)rand() / RAND_MAX;
+//     return fMin + f * (fMax - fMin);
+// }
+
 int main(int argc, char * argv[]) {
     srand(time(0));
 
@@ -49,10 +54,35 @@ int main(int argc, char * argv[]) {
             players[i]->get_input();
         }
 
+
+        NeuralNetwork** saved = new NeuralNetwork*[10];
+        for (unsigned i = 0; i < 10; ++i) {
+            saved[i] = new NeuralNetwork(players[i]->getController()->getNetwork(), params);
+        }
         for (unsigned i = 0; i < 200; ++i) {
             delete players[i];
             delete balls[i];
         }
+
+        players = new Player*[200];
+        balls = new Ball*[200];
+        for (unsigned i = 0; i < 200; ++i) {
+            cout << "going forward_propagation" << endl;
+            balls[i] = new Ball();
+            unsigned dad_index = fRand(0, 10);
+            unsigned mom_index = fRand(0, 10);
+            cout << "done" << endl;
+
+
+            AI* child = new AI(new Sensor(balls[i]), params, saved[dad_index], saved[mom_index], 0.05);
+
+            child->getNetwork()->forward_propagation();
+            players[i] = new Player(child, 32,(HEIGHT/2)-(HEIGHT/8),(HEIGHT/HEIGHT_RATIO),12);
+            // cout << "going forward_propagation" << endl;
+            // players[i]->getController()->getNetwork()->print_biases();
+            // cout << "done" << endl;
+        }
+
 
         delete [] balls;
         delete [] players;

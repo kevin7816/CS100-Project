@@ -132,6 +132,7 @@ int main(int argc, char * argv[]) {
             }
         }
         handler.update();
+        cout << "jasldfjlk" << endl;
         input(running);
         left_paddle->get_input();
 

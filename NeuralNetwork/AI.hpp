@@ -64,6 +64,7 @@ public:
 
     virtual void move(Player* paddle) {
         sensor->set_activations(paddle, nn->get_inputs(), nn->num_inputs());
+        //cout << "after setting activations" << endl;
         //std::cout << "moving" << std::endl;
         // float* test = nn->get_inputs();
         // for (unsigned i = 0; i < 7; ++i) {
