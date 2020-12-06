@@ -8,49 +8,78 @@
 #include <string>
 #include <cstring>
 
+#include <type_traits>
+#include <typeinfo>
+#ifndef _MSC_VER
+#   include <cxxabi.h>
+#endif
+#include <memory>
+#include <string>
+#include <cstdlib>
+
 using namespace std;
+
+template <class T> std::string type_name() {
+    typedef typename std::remove_reference<T>::type TR;
+    std::unique_ptr<char, void(*)(void*)> own (
+        #ifndef _MSC_VER
+            abi::__cxa_demangle(typeid(TR).name(), nullptr, nullptr, nullptr),
+        #else
+            nullptr,
+        #endif
+            std::free
+    );
+    std::string r = own != nullptr ? own.get() : typeid(TR).name();
+    if (std::is_const<TR>::value)
+        r += " const";
+    if (std::is_volatile<TR>::value)
+        r += " volatile";
+    if (std::is_lvalue_reference<T>::value)
+        r += "&";
+    else if (std::is_rvalue_reference<T>::value)
+        r += "&&";
+    return r;
+}
 
 class Text : public Object {
     // private members
-    private:
-        const char* words;
+    public:
+        const char* words = "";
         const char* font = "pixel.ttf";
         double size = 100;
-        TTF_Font* text_font;
-        SDL_Surface* text_surface;
-        SDL_Texture* text_texture;
+        TTF_Font* text_font = nullptr;
+        SDL_Surface* text_surface = nullptr;
+        SDL_Texture* text_texture = nullptr;
         SDL_Color color = {255, 255, 255, 255}; // default white
         SDL_Rect text_rect;  
 
     public:
         // constructors
-        Text(const char* words) 
-            : words(words) {};
+        Text(const char* words) : words(words) {};
 
-        Text(const char* words, double size) 
-            : words(words), size(size) {};
+        Text(const char* words, double size) : words(words), size(size) {};
 
-        Text(const char* words, const char* font) 
-            : words(words), font(font) {};
+        Text(const char* words, const char* font) : words(words), font(font) {};
             
-        Text(const char* words, const char* font, double size, SDL_Color color) 
-            : words(words), font(font), size(size), color(color) {};
+        Text(const char* words, const char* font, double size, SDL_Color color) : words(words), font(font), size(size), color(color) {};
+
+        Text(int num) : words(to_string(num).c_str()) {};
         
         // destructor
         ~Text() {
+            SDL_DestroyTexture(text_texture);
             SDL_FreeSurface(text_surface);
             TTF_CloseFont(text_font);
-            TTF_Quit();
         }
         
         // public functions
         void create_text(SDL_Renderer* renderer) {
             // initialize ttf
-            TTF_Init();
-            if (TTF_Init() < 0) {
-                fprintf(stderr, "Could not init TTF\n", SDL_GetError());
-                return;
-            }
+            // TTF_Init();
+            // if (TTF_Init() < 0) {
+            //     fprintf(stderr, "Could not init TTF\n", SDL_GetError());
+            //     return;
+            // }
 
             // get font
             text_font = TTF_OpenFontIndex(font, size, 0); // change last argument if font has different font faces
@@ -66,6 +95,10 @@ class Text : public Object {
             return;
         }
         void show(SDL_Renderer* renderer) {
+            // words = to_string(23).c_str();
+            // std::cout << "decltype(words) in Text show() is " << type_name<decltype(words)>() << '\n';
+            // cout << words << endl << endl;
+
             // create text_surface, and text_texture for surface
             text_surface = TTF_RenderText_Solid(text_font, words, color);
             text_texture = SDL_CreateTextureFromSurface(renderer, text_surface);
@@ -76,7 +109,7 @@ class Text : public Object {
 
             return;
         }
-        void set_text_color(int r, int b, int g) {
+        void set_text_color(unsigned char r, unsigned char b, unsigned char g) {
             color = {r, b, g, 255}; // default opacity = 255 = full
             return;
         }

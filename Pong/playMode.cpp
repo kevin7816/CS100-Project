@@ -25,10 +25,19 @@ int main(int argc, char * argv[]) {
         return 1;
     }
 
+    TTF_Init();
+    if (TTF_Init() < 0) {
+        fprintf(stderr, "Could not init TTF\n", SDL_GetError());
+        return 1;
+    }
+
     Play play_mode;  
     play_mode.setup(renderer);
     play_mode.run_game(renderer);  
 
+    // SDL_FreeSurface(text_surface);
+    // TTF_CloseFont(text_font);
+    TTF_Quit();
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();

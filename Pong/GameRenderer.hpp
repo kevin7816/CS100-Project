@@ -3,11 +3,13 @@
 
 #include "sdl2lib/include/SDL2/SDL.h"
 #include "Object.hpp"
+#include "Text.hpp"
 #include <iostream>
 #include <vector>
+// #include <typeinfo>
 
 class GameRenderer {
-    private:
+    public:
         std::vector<Object*> gameObjects;
     public:
         GameRenderer() { };
@@ -16,7 +18,10 @@ class GameRenderer {
             SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);     //renders black screen
             SDL_RenderClear(renderer);
 
-            for(unsigned i=0;i< gameObjects.size();i++){
+            for(unsigned i = 0; i < gameObjects.size(); i++){
+                // if (dynamic_cast<Text*>(gameObjects.at(i))) {
+                //     std::cout << dynamic_cast<Text*>(gameObjects.at(i))->words << std::endl;
+                // }
                 gameObjects.at(i)->show(renderer);
             }
             SDL_RenderPresent(renderer);                    // update screen all at once to prevent flickering
@@ -37,6 +42,15 @@ class GameRenderer {
         // }
         void add(Object* object) {
             gameObjects.push_back(object);
+            return;
+        }
+        void remove(Object* object) {
+            for (unsigned i = 0; i < gameObjects.size(); i++) {
+                if (gameObjects.at(i) == object) {
+                    gameObjects.erase(gameObjects.begin() + i);
+                    break;
+                }
+            }
             return;
         }
 };
