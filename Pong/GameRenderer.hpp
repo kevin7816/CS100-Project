@@ -6,10 +6,9 @@
 #include "Text.hpp"
 #include <iostream>
 #include <vector>
-// #include <typeinfo>
 
 class GameRenderer {
-    public:
+    private:
         std::vector<Object*> gameObjects;
     public:
         GameRenderer() { };
@@ -20,8 +19,6 @@ class GameRenderer {
 
             for(unsigned i = 0; i < gameObjects.size(); i++){
                 if (dynamic_cast<Text*>(gameObjects.at(i))) {
-                    // cout << "dynamic_cast<Text*>(gameObjects.at(i))->score.first: " << dynamic_cast<Text*>(gameObjects.at(i))->score.first << endl;
-                    // std::cout << dynamic_cast<Text*>(gameObjects.at(i))->words << std::endl;
                     if (dynamic_cast<Text*>(gameObjects.at(i))->score.first == 0) { // score_left
                         dynamic_cast<Text*>(gameObjects.at(i))->words = to_string(score_lelf).c_str();
                     }

@@ -45,22 +45,15 @@ class Play : public GameMode {
             // set up ball
             ball = new Ball();
 
-            // set up texts 
+            // set up static texts 
             // Text* message = new Text("Press ESCAPE to exit", 50);
             // message->create_text(renderer);
             // message->set_text_pos(300, 0); // settings related to the text's position needs to be called after create()
-
-            // // string str = "23";
-            // char const* const num = to_string(23).c_str();
-            // Text* score_r = new Text(to_string(23).c_str());
-            // score_r->create_text(renderer);
-            // score_r->set_text_pos(100, 0); // settings related to the text's position needs to be called after create()
 
             // add all created game objects to gameRend for rendering
             gameRend.add(left_paddle);
             gameRend.add(right_paddle);
             gameRend.add(ball);
-            // gameRend.add(score_r);
 
             return;
         }
@@ -76,10 +69,8 @@ class Play : public GameMode {
 
             // initial scores
             score_r = new Text(to_string(score_right).c_str(), 100, make_pair(920,0), 1);
-            // score_r->set_text_pos(500, 0);
             gameRend.add(score_r);
             score_l = new Text(to_string(score_left).c_str(), 100, make_pair(280,0), 0);
-            // score_l->set_text_pos(100, 0);
             gameRend.add(score_l);
 
             serve(turn, score_left, score_right);
@@ -95,26 +86,6 @@ class Play : public GameMode {
                 input(running);
                 left_paddle->get_input();
                 right_paddle->get_input();
-
-                // for(unsigned i = 0; i < gameRend.gameObjects.size(); i++){
-                //     if (dynamic_cast<Text*>(gameRend.gameObjects.at(i))) {
-                //         // std::cout << dynamic_cast<Text*>(gameRend.gameObjects.at(i))->words << std::endl;
-                //         gameRend.gameObjects.at(i) = dynamic_cast<Text*>(gameRend.gameObjects.at(i));
-                //     }
-                // }
-
-                // string str = "23";
-                // char const* const num = to_string(23).c_str();
-                // Text* score_r = new Text(num);
-
-                // gameRend.add(score_r);
-                // gameRend.add(score_l);
-
-                // if (score_l && score_r) {
-                //     std::cout << "while l: " << score_l->words << std::endl;
-                //     std::cout << "while r: " << score_r->words << std::endl;
-                // }
-
                 
                 gameRend.render_all(renderer, frameCount, timerFPS, lastFrame, score_left, score_right);
             }
@@ -127,10 +98,6 @@ class Play : public GameMode {
             // cout scores in a new serve
             cout << "Player LEFT: " << score_left << endl;
             cout << "Player RIGHT: " << score_right << endl << endl;
-            if (score_l && score_r) {
-                std::cout << "serve l: " << score_l->words << std::endl;
-                std::cout << "serve r: " << score_r->words << std::endl;
-            }
 
             if(turn) { // turn == 1 == left's turn to serve
                 left_paddle->setY((HEIGHT/2) - (left_paddle->getH())/2); //sets the paddles in place
@@ -188,11 +155,6 @@ class Play : public GameMode {
                 gameRend.remove(score_r);
                 delete score_r;
                 score_r = new Text(to_string(score_right).c_str(), 100, make_pair(920,0), 1);
-                // score_r = new Text(score_right, 1);
-                std::cout << "update r: " << score_r->words << std::endl;
-                // score_r->set_text_size(50 - score_right);
-                // score_r->create_text(renderer);
-                // score_r->set_text_pos(500, 0); // settings related to the text's position needs to be called after create()
                 gameRend.add(score_r);
 
                 serve(turn, score_left, score_right);
@@ -204,11 +166,6 @@ class Play : public GameMode {
                 gameRend.remove(score_l);
                 delete score_l;
                 score_l = new Text(to_string(score_left).c_str(), 100, make_pair(280,0), 0);
-                // score_r = new Text(score_left, 0);
-                std::cout << "update l: " << score_l->words << std::endl;
-                // score_l->set_text_size(50 - score_left);
-                // score_l->create_text(renderer);
-                // score_l->set_text_pos(100, 0); // settings related to the text's position needs to be called after create()
                 gameRend.add(score_l);
 
                 serve(turn, score_left, score_right);
