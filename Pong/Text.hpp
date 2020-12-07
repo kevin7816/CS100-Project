@@ -7,44 +7,46 @@
 #include <iostream>
 #include <string>
 #include <cstring>
+#include <utility>
 
-#include <type_traits>
-#include <typeinfo>
-#ifndef _MSC_VER
-#   include <cxxabi.h>
-#endif
-#include <memory>
-#include <string>
-#include <cstdlib>
+// #include <type_traits>
+// #include <typeinfo>
+// #ifndef _MSC_VER
+// #   include <cxxabi.h>
+// #endif
+// #include <memory>
+// #include <string>
+// #include <cstdlib>
 
 using namespace std;
 
-template <class T> std::string type_name() {
-    typedef typename std::remove_reference<T>::type TR;
-    std::unique_ptr<char, void(*)(void*)> own (
-        #ifndef _MSC_VER
-            abi::__cxa_demangle(typeid(TR).name(), nullptr, nullptr, nullptr),
-        #else
-            nullptr,
-        #endif
-            std::free
-    );
-    std::string r = own != nullptr ? own.get() : typeid(TR).name();
-    if (std::is_const<TR>::value)
-        r += " const";
-    if (std::is_volatile<TR>::value)
-        r += " volatile";
-    if (std::is_lvalue_reference<T>::value)
-        r += "&";
-    else if (std::is_rvalue_reference<T>::value)
-        r += "&&";
-    return r;
-}
+// template <class T> std::string type_name() {
+//     typedef typename std::remove_reference<T>::type TR;
+//     std::unique_ptr<char, void(*)(void*)> own (
+//         #ifndef _MSC_VER
+//             abi::__cxa_demangle(typeid(TR).name(), nullptr, nullptr, nullptr),
+//         #else
+//             nullptr,
+//         #endif
+//             std::free
+//     );
+//     std::string r = own != nullptr ? own.get() : typeid(TR).name();
+//     if (std::is_const<TR>::value)
+//         r += " const";
+//     if (std::is_volatile<TR>::value)
+//         r += " volatile";
+//     if (std::is_lvalue_reference<T>::value)
+//         r += "&";
+//     else if (std::is_rvalue_reference<T>::value)
+//         r += "&&";
+//     return r;
+// }
 
 class Text : public Object {
     // private members
     public:
         const char* words = "";
+        pair<int, const char*> score = make_pair(-1, words); // -1 == not a score; 0 == score_left; 1 == score_right
         const char* font = "pixel.ttf";
         double size = 100;
         TTF_Font* text_font = nullptr;
@@ -58,12 +60,26 @@ class Text : public Object {
         Text(const char* words) : words(words) {};
 
         Text(const char* words, double size) : words(words), size(size) {};
-
-        Text(const char* words, const char* font) : words(words), font(font) {};
             
         Text(const char* words, const char* font, double size, SDL_Color color) : words(words), font(font), size(size), color(color) {};
 
-        Text(int num) : words(to_string(num).c_str()) {};
+        Text(const char* words, int s) : words(words) {
+            cout << "hi" << endl;
+            // words = to_string(num).c_str();
+            score.first = s;
+            score.second = words;
+            cout << "score.first: " << score.first << endl;
+            cout << "score.first: " << score.second << endl;
+        };
+
+        // Text(int num, int s) {
+        //     cout << "hi" << endl;
+        //     words = to_string(num).c_str();
+        //     score.first = s;
+        //     score.second = words;
+        //     cout << "score.first: " << score.first << endl;
+        //     cout << "score.first: " << score.second << endl;
+        // };
         
         // destructor
         ~Text() {
@@ -82,6 +98,19 @@ class Text : public Object {
             // }
 
             // get font
+            // text_font = TTF_OpenFontIndex(font, size, 0); // change last argument if font has different font faces
+            // if (text_font == nullptr) { 
+            //     TTF_SetError("Loading failed :( (code: %d)", 142);
+            //     cout << "Error: " << TTF_GetError() << endl;
+            //     return;
+            // }
+
+            // // create rect that will contain text
+            // set_text_rect_wh(text_rect.w, text_rect.h);
+
+            return;
+        }
+        void show(SDL_Renderer* renderer) {
             text_font = TTF_OpenFontIndex(font, size, 0); // change last argument if font has different font faces
             if (text_font == nullptr) { 
                 TTF_SetError("Loading failed :( (code: %d)", 142);
@@ -91,10 +120,6 @@ class Text : public Object {
 
             // create rect that will contain text
             set_text_rect_wh(text_rect.w, text_rect.h);
-
-            return;
-        }
-        void show(SDL_Renderer* renderer) {
             // words = to_string(23).c_str();
             // std::cout << "decltype(words) in Text show() is " << type_name<decltype(words)>() << '\n';
             // cout << words << endl << endl;
@@ -107,6 +132,10 @@ class Text : public Object {
             SDL_RenderCopy(renderer, text_texture, NULL, &text_rect);
             // SDL_RenderPresent(renderer);
 
+            return;
+        }
+        void set_words(const char* new_words) {
+            words = new_words;
             return;
         }
         void set_text_color(unsigned char r, unsigned char b, unsigned char g) {

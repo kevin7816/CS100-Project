@@ -14,14 +14,21 @@ class GameRenderer {
     public:
         GameRenderer() { };
 
-        void render_all(SDL_Renderer *renderer, int frameCount, int timerFPS, int lastFrame){
+        void render_all(SDL_Renderer *renderer, int frameCount, int timerFPS, int lastFrame, int score_lelf, int score_right){
             SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);     //renders black screen
             SDL_RenderClear(renderer);
 
             for(unsigned i = 0; i < gameObjects.size(); i++){
-                // if (dynamic_cast<Text*>(gameObjects.at(i))) {
-                //     std::cout << dynamic_cast<Text*>(gameObjects.at(i))->words << std::endl;
-                // }
+                if (dynamic_cast<Text*>(gameObjects.at(i))) {
+                    // cout << "dynamic_cast<Text*>(gameObjects.at(i))->score.first: " << dynamic_cast<Text*>(gameObjects.at(i))->score.first << endl;
+                    // std::cout << dynamic_cast<Text*>(gameObjects.at(i))->words << std::endl;
+                    if (dynamic_cast<Text*>(gameObjects.at(i))->score.first == 0) { // score_left
+                        dynamic_cast<Text*>(gameObjects.at(i))->words = to_string(score_lelf).c_str();
+                    }
+                    else if (dynamic_cast<Text*>(gameObjects.at(i))->score.first == 1) { // score_right
+                        dynamic_cast<Text*>(gameObjects.at(i))->words = to_string(score_right).c_str();
+                    }
+                }
                 gameObjects.at(i)->show(renderer);
             }
             SDL_RenderPresent(renderer);                    // update screen all at once to prevent flickering

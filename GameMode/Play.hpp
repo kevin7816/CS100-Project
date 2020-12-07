@@ -106,8 +106,9 @@ class Play : public GameMode {
                 //     std::cout << "while l: " << score_l->words << std::endl;
                 //     std::cout << "while r: " << score_r->words << std::endl;
                 // }
+
                 
-                gameRend.render_all(renderer, frameCount, timerFPS, lastFrame);
+                gameRend.render_all(renderer, frameCount, timerFPS, lastFrame, score_left, score_right);
             }
 
             return;
@@ -178,8 +179,8 @@ class Play : public GameMode {
 
                 gameRend.remove(score_r);
                 delete score_r;
-                // score_r = new Text(to_string(score_right).c_str(), 50);
-                score_r = new Text(score_right);
+                score_r = new Text(to_string(score_right).c_str(), 1);
+                // score_r = new Text(score_right, 1);
                 std::cout << "update r: " << score_r->words << std::endl;
                 score_r->set_text_size(50 - score_right);
                 score_r->create_text(renderer);
@@ -194,7 +195,8 @@ class Play : public GameMode {
 
                 gameRend.remove(score_l);
                 delete score_l;
-                score_l = new Text(to_string(score_left).c_str(), 50);
+                score_l = new Text(to_string(score_left).c_str(), 0);
+                // score_r = new Text(score_left, 0);
                 std::cout << "update l: " << score_l->words << std::endl;
                 score_l->set_text_size(50 - score_left);
                 score_l->create_text(renderer);
