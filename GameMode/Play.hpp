@@ -74,6 +74,14 @@ class Play : public GameMode {
             int frameCount, timerFPS, lastFrame, fps;
             static int lastTime = 0;
 
+            // initial scores
+            score_r = new Text(to_string(score_right).c_str(), 100, make_pair(920,0), 1);
+            // score_r->set_text_pos(500, 0);
+            gameRend.add(score_r);
+            score_l = new Text(to_string(score_left).c_str(), 100, make_pair(280,0), 0);
+            // score_l->set_text_pos(100, 0);
+            gameRend.add(score_l);
+
             serve(turn, score_left, score_right);
 
             while(running){
@@ -179,12 +187,12 @@ class Play : public GameMode {
 
                 gameRend.remove(score_r);
                 delete score_r;
-                score_r = new Text(to_string(score_right).c_str(), 1);
+                score_r = new Text(to_string(score_right).c_str(), 100, make_pair(920,0), 1);
                 // score_r = new Text(score_right, 1);
                 std::cout << "update r: " << score_r->words << std::endl;
-                score_r->set_text_size(50 - score_right);
-                score_r->create_text(renderer);
-                score_r->set_text_pos(500, 0); // settings related to the text's position needs to be called after create()
+                // score_r->set_text_size(50 - score_right);
+                // score_r->create_text(renderer);
+                // score_r->set_text_pos(500, 0); // settings related to the text's position needs to be called after create()
                 gameRend.add(score_r);
 
                 serve(turn, score_left, score_right);
@@ -195,12 +203,12 @@ class Play : public GameMode {
 
                 gameRend.remove(score_l);
                 delete score_l;
-                score_l = new Text(to_string(score_left).c_str(), 0);
+                score_l = new Text(to_string(score_left).c_str(), 100, make_pair(280,0), 0);
                 // score_r = new Text(score_left, 0);
                 std::cout << "update l: " << score_l->words << std::endl;
-                score_l->set_text_size(50 - score_left);
-                score_l->create_text(renderer);
-                score_l->set_text_pos(100, 0); // settings related to the text's position needs to be called after create()
+                // score_l->set_text_size(50 - score_left);
+                // score_l->create_text(renderer);
+                // score_l->set_text_pos(100, 0); // settings related to the text's position needs to be called after create()
                 gameRend.add(score_l);
 
                 serve(turn, score_left, score_right);

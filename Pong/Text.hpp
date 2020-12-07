@@ -63,13 +63,11 @@ class Text : public Object {
             
         Text(const char* words, const char* font, double size, SDL_Color color) : words(words), font(font), size(size), color(color) {};
 
-        Text(const char* words, int s) : words(words) {
-            cout << "hi" << endl;
-            // words = to_string(num).c_str();
+        Text(const char* words, double size, pair<int,int> pos, int s) : words(words), size(size) {
+            text_rect.x = pos.first;
+            text_rect.y = pos.second;
             score.first = s;
             score.second = words;
-            cout << "score.first: " << score.first << endl;
-            cout << "score.first: " << score.second << endl;
         };
 
         // Text(int num, int s) {
@@ -89,27 +87,6 @@ class Text : public Object {
         }
         
         // public functions
-        void create_text(SDL_Renderer* renderer) {
-            // initialize ttf
-            // TTF_Init();
-            // if (TTF_Init() < 0) {
-            //     fprintf(stderr, "Could not init TTF\n", SDL_GetError());
-            //     return;
-            // }
-
-            // get font
-            // text_font = TTF_OpenFontIndex(font, size, 0); // change last argument if font has different font faces
-            // if (text_font == nullptr) { 
-            //     TTF_SetError("Loading failed :( (code: %d)", 142);
-            //     cout << "Error: " << TTF_GetError() << endl;
-            //     return;
-            // }
-
-            // // create rect that will contain text
-            // set_text_rect_wh(text_rect.w, text_rect.h);
-
-            return;
-        }
         void show(SDL_Renderer* renderer) {
             text_font = TTF_OpenFontIndex(font, size, 0); // change last argument if font has different font faces
             if (text_font == nullptr) { 
@@ -158,6 +135,9 @@ class Text : public Object {
         void set_text_pos_y(int pos_y) { 
             text_rect.y = pos_y;
             return;
+        }
+        int get_text_pos_x() { 
+            return text_rect.x;
         }
         
 
