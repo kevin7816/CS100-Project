@@ -32,7 +32,7 @@ private:
     Ball** balls;
     Player** players; //player holds ais
 
-    unsigned fittest;
+    float fittest;
     unsigned num_generations;
 
 public:
@@ -78,6 +78,14 @@ public:
 
         if (num_alive == 0) {
             clear();
+            system("CLS");
+
+            cout << "most fit: " << fittest << endl;
+            for (unsigned i = 0; i < best_networks.size(); ++i) {
+                if (best_networks.at(i).second > fittest) {
+                    fittest = best_networks.at(i).second;
+                }
+            }
             cout << "most fit: " << fittest << endl;
             cout << "breeding a new generation" << endl;
             breed_new_generation();
@@ -85,7 +93,7 @@ public:
             for (unsigned i = 0; i < NUM_RENDERED_AIS; ++i) { //only render the first 5 players
                 rendered_indices.push_back(i);
             }
-            cout << "breeding a new generation" << endl;
+            //cout << "breeding a new generation" << endl;
             serve();
         }
     }
@@ -167,8 +175,8 @@ private:
         else {
             for (unsigned i = 0; i < best_networks.size(); ++i) {
                 if (best_networks.at(i).second <= fitness) {
-                    cout << best_networks.size() << endl;
-                    cout << fitness << " saving network" << endl;
+                    //cout << best_networks.size() << endl;
+                    //cout << fitness << " saving network" << endl;
                     NeuralNetwork* nn = new NeuralNetwork((paddle->getController()->getNetwork()), network_params);
 
                     if (best_networks.at(i).first) {
@@ -241,7 +249,10 @@ private:
         }
 
         rendered_indices.clear();
-        best_networks.clear();
+        for (unsigned i = 0; i < best_networks.size(); ++i) {
+            best_networks.at(i).second -= 0.1;
+        }
+        // best_networks.clear();
         fittest = 0;
         num_alive = generation_size;
     }

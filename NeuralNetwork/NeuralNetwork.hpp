@@ -80,63 +80,98 @@ public:
 
     NeuralNetwork(NetworkParams & params): NeuralNetwork(params.inputs, params.outputs, params.hidden_layers, params.hidden_layer_size) {}
 
+    // NeuralNetwork(unsigned inputs, unsigned outputs, unsigned hidden_layers, unsigned hidden_layer_size, NeuralNetwork* nn1, NeuralNetwork* nn2, float mutation_rate):
+    // inputs(inputs),  outputs(outputs), hidden_layer_size(hidden_layer_size) {
+    //     num_layers = hidden_layers + 2;
+    //
+    //     //initializing the weights in the adjacency matrices
+    //     //cout << "weights" << endl;
+    //     adjacency_matrices = new float**[num_layers]; //all layers have a adjacency matrix except for input layer
+    //     for (unsigned index = 0; index < num_layers-1; ++index) {
+    //         unsigned i_size;
+    //         unsigned j_size;
+    //
+    //         if (index == 0) { //first adjacency_matrix is under the second layer
+    //             adjacency_matrices[index] = new float*[inputs];
+    //             i_size = hidden_layer_size;
+    //             j_size = inputs;
+    //         }
+    //         else if (index == num_layers-2) { //last adjacency matrix on the output layer
+    //             adjacency_matrices[index] = new float*[outputs];
+    //             i_size = outputs;
+    //             j_size = hidden_layer_size;
+    //         }
+    //         else { // hidden layers connected to hidden layers
+    //             adjacency_matrices[index] = new float*[hidden_layer_size];
+    //             i_size = hidden_layer_size;
+    //             j_size = hidden_layer_size;
+    //         }
+    //
+    //         for (unsigned i = 0; i < i_size; ++i) {
+    //             adjacency_matrices[index][i] = new float[j_size];
+    //             for (unsigned j = 0; j < j_size; ++j) {
+    //                 float new_weight = choose(nn1->get_weights()[index][i][j], nn2->get_weights()[index][i][j]);
+    //                 new_weight = mutate(new_weight, mutation_rate);
+    //                 adjacency_matrices[index][i][j] = new_weight;
+    //             }
+    //         }
+    //     }
+    //     //cout << "finsihed" << endl;
+    //
+    //     biases = new float*[num_layers];
+    //     activations = new float*[num_layers];
+    //     for (unsigned i = 0; i < num_layers; ++i) {
+    //         unsigned j_size;
+    //         if (i==0) { j_size = inputs; }
+    //         else if (i==num_layers-1) { j_size = outputs; }
+    //         else { j_size = hidden_layer_size; }
+    //
+    //         biases[i] = new float[j_size];
+    //         activations[i] = new float[j_size];
+    //         for (unsigned j = 0; j < j_size; ++j) {
+    //             activations[i][j] = 0;
+    //             if (i == 0) { //input nodes dont have a bias
+    //                 biases[i][j] = 0;
+    //             }
+    //             else {
+    //                 float new_bias = choose(nn1->get_biases()[i][j], nn2->get_biases()[i][j]);
+    //                 new_bias = mutate(new_bias, mutation_rate);
+    //                 biases[i][j] = new_bias;
+    //             }
+    //         }
+    //     }
+    // }
+
     NeuralNetwork(unsigned inputs, unsigned outputs, unsigned hidden_layers, unsigned hidden_layer_size, NeuralNetwork* nn1, NeuralNetwork* nn2, float mutation_rate):
-    inputs(inputs),  outputs(outputs), hidden_layer_size(hidden_layer_size) {
-        num_layers = hidden_layers + 2;
-
-        //initializing the weights in the adjacency matrices
-        //cout << "weights" << endl;
-        adjacency_matrices = new float**[num_layers]; //all layers have a adjacency matrix except for input layer
-        for (unsigned index = 0; index < num_layers-1; ++index) {
-            unsigned i_size;
-            unsigned j_size;
-
-            if (index == 0) { //first adjacency_matrix is under the second layer
-                adjacency_matrices[index] = new float*[inputs];
-                i_size = hidden_layer_size;
-                j_size = inputs;
+    NeuralNetwork(inputs, outputs, hidden_layers, hidden_layer_size) {
+        for(unsigned i = 0; i < num_layers; ++i) {
+            unsigned size = hidden_layer_size;
+            if ( i == 0) {
+                size = inputs;
             }
-            else if (index == num_layers-2) { //last adjacency matrix on the output layer
-                adjacency_matrices[index] = new float*[outputs];
-                i_size = outputs;
-                j_size = hidden_layer_size;
+            else if (i == num_layers-1) {
+                size = outputs;
             }
-            else { // hidden layers connected to hidden layers
-                adjacency_matrices[index] = new float*[hidden_layer_size];
-                i_size = hidden_layer_size;
-                j_size = hidden_layer_size;
-            }
-
-            for (unsigned i = 0; i < i_size; ++i) {
-                adjacency_matrices[index][i] = new float[j_size];
-                for (unsigned j = 0; j < j_size; ++j) {
-                    float new_weight = choose(nn1->get_weights()[index][i][j], nn2->get_weights()[index][i][j]);
-                    new_weight = mutate(new_weight, mutation_rate);
-                    adjacency_matrices[index][i][j] = new_weight;
-                }
+            for (unsigned j = 0; j < size; ++j) {
+                float new_bias = choose(nn1->get_biases()[i][j], nn2->get_biases()[i][j]);
+                biases[i][j] = mutate(new_bias, mutation_rate);
             }
         }
-        //cout << "finsihed" << endl;
 
-        biases = new float*[num_layers];
-        activations = new float*[num_layers];
-        for (unsigned i = 0; i < num_layers; ++i) {
-            unsigned j_size;
-            if (i==0) { j_size = inputs; }
-            else if (i==num_layers-1) { j_size = outputs; }
-            else { j_size = hidden_layer_size; }
-
-            biases[i] = new float[j_size];
-            activations[i] = new float[j_size];
-            for (unsigned j = 0; j < j_size; ++j) {
-                activations[i][j] = 0;
-                if (i == 0) { //input nodes dont have a bias
-                    biases[i][j] = 0;
-                }
-                else {
-                    float new_bias = choose(nn1->get_biases()[i][j], nn2->get_biases()[i][j]);
-                    new_bias = mutate(new_bias, mutation_rate);
-                    biases[i][j] = new_bias;
+        //copy weights
+        for (unsigned index = 0; index < num_layers-1; ++index) {
+            unsigned rows = hidden_layer_size;
+            unsigned cols = hidden_layer_size;
+            if (index == 0) {
+                cols = inputs;
+            }
+            if (index == num_layers-2) {
+                rows = outputs;
+            }
+            for (unsigned i = 0; i < rows; ++i) {
+                for (unsigned j = 0; j < cols; ++j) {
+                    float new_weight = choose(nn1->get_weights()[index][i][j], nn2->get_weights()[index][i][j]);
+                    adjacency_matrices[index][i][j] = mutate(new_weight, mutation_rate);
                 }
             }
         }

@@ -43,11 +43,16 @@ void update(Player* left_paddle, Ball* ball){
         double rel= (left_paddle->getY()+(left_paddle->getH()/2))-(ball->getY()+8);
         double norm = rel/(left_paddle->getH()/2);
         double bounce = norm * (5*PI/12);
-        double num= (rand() % 100);
+        double num= (rand() % 360);
+        while (abs(sin(num)) > 0.7) {
+            //cout << "do over" << endl;
+            num= (rand() % 360);
+        }
         //ball->setVelX((ball->getSpeed()*1)*cos(bounce));
         //ball->setVelY((ball->getSpeed())*-sin(bounce));
         ball->setVelX((ball->getSpeed()*1)*abs(cos(num)));                               //sends ball at different angle based on where the ball has hit the paddle
-        ball->setVelY((ball->getSpeed())*-abs(sin(num)));
+        ball->setVelY((ball->getSpeed())*abs(sin(num)));
+        //ball->setVelY((ball->getSpeed())*sin(num));
     }
     //if(ball->getX()<=0) handler.serve(ball);                                   //checks to see if ball has reacted the left or right side to score point
     if(ball->getY()<=0 || ball->getY()+16>=HEIGHT) ball->setVelY(ball->getVelY()*-1);       //check to see if ball hit top or bottom walls
@@ -100,8 +105,8 @@ int main(int argc, char * argv[]) {
     Player* left_paddle = new Player(left_controller, 32,(HEIGHT/2)-(HEIGHT/8),(HEIGHT),12); //height / 4 if actual paddle;
     gameRend.add(left_paddle);
 
-    NetworkParams params(5,3,1,10);
-    NetworkHandler handler(params, 0.05, 200);
+    NetworkParams params(4,3,1,5);
+    NetworkHandler handler(params, 0.05, 1200);
     handler.init_networks();
 
     handler.serve();
@@ -132,12 +137,12 @@ int main(int argc, char * argv[]) {
             }
         }
         handler.update();
-        cout << "jasldfjlk" << endl;
+        //cout << "jasldfjlk" << endl;
         input(running);
         left_paddle->get_input();
 
         //render(frameCount, timerFPS, lastFrame, renderer, left_paddle, right_paddle, ball, message);
-        if (handler.get_nth_generation() % 10000 == 0) {
+        if (handler.get_nth_generation() % 500 == 0) {
             gameRend.render_all(renderer, frameCount, timerFPS, lastFrame, handler.getObjects());
         }
     }

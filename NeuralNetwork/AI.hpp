@@ -34,7 +34,11 @@ public:
     AI(Sensor* sensor, NetworkParams & params, NeuralNetwork* nn1, NeuralNetwork* nn2, float mutation_rate):
     Controller(0), sensor(sensor) {
         //cout << "breeding network" << endl;
+        nn1->forward_propagation();
+        nn2->forward_propagation();
+
         nn = new NeuralNetwork(params, nn1, nn2, mutation_rate);
+        //cout << "made network" << endl;
         movement = new bool[params.inputs];
         for (unsigned i = 0; i < params.inputs; ++i) {
             movement[i] = false;
@@ -76,7 +80,7 @@ public:
 
         float * outputs = nn->get_outputs();
 
-        unsigned index_max = 0;
+        unsigned index_max = 1;
         for (unsigned i = 0; i < NUM_OUTPUTS; ++i) {
             //std::cout << outputs[i] << ' ';
             if (outputs[i] > outputs[index_max]) {

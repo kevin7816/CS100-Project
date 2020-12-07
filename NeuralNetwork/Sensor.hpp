@@ -44,7 +44,7 @@ private:
         //cout << activations[0] << endl;
         activations[1] = normalize(ball->getY(), 0, HEIGHT);
         activations[2] = normalize(player->getY(), 0, HEIGHT);
-        activations[4] = normalize(ball->getVelX(), -BALL_SPEED + 2, BALL_SPEED - 2);
+        activations[3] = normalize(ball->getVelX(), -BALL_SPEED + 2, BALL_SPEED - 2);
     }
 
     void set_5_activations(Player* player, float* activations) {

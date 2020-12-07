@@ -40,10 +40,11 @@ int main(int argc, char * argv[]) {
         return 1;
     }
 
-    NetworkParams params(5,3,1,10);
+    NetworkParams params(5,3,1,15);
 
     Player** players;
     Ball** balls;
+    unsigned total = 0;
     while (1) {
         players = new Player*[200];
         balls = new Ball*[200];
@@ -63,30 +64,46 @@ int main(int argc, char * argv[]) {
             delete players[i];
             delete balls[i];
         }
+        delete [] balls;
+        delete [] players;
+        for (unsigned i = 0; i < 10; ++i) {
+            saved[i]->forward_propagation();
+        }
+        cout << total << endl;
 
         players = new Player*[200];
         balls = new Ball*[200];
+        //cout << "going forward_propagation" << endl;
         for (unsigned i = 0; i < 200; ++i) {
-            cout << "going forward_propagation" << endl;
             balls[i] = new Ball();
-            unsigned dad_index = fRand(0, 10);
-            unsigned mom_index = fRand(0, 10);
-            cout << "done" << endl;
+            unsigned dad_index = fRand(0, 10-1);
+            unsigned mom_index = fRand(0, 10-1);
 
-
+            //cout << dad_index << ' ' << mom_index << " done" << endl;
             AI* child = new AI(new Sensor(balls[i]), params, saved[dad_index], saved[mom_index], 0.05);
 
             child->getNetwork()->forward_propagation();
+            //cout << "done2" << endl;
             players[i] = new Player(child, 32,(HEIGHT/2)-(HEIGHT/8),(HEIGHT/HEIGHT_RATIO),12);
             // cout << "going forward_propagation" << endl;
-            // players[i]->getController()->getNetwork()->print_biases();
-            // cout << "done" << endl;
+            players[i]->getController()->getNetwork()->forward_propagation();
+            //cout << "done3" << endl;
+
         }
 
 
+        for (unsigned i = 0; i < 200; ++i) {
+            delete players[i];
+            delete balls[i];
+        }
+        for (unsigned i = 0; i < 10; ++i) {
+            delete saved[i];
+        }
         delete [] balls;
         delete [] players;
+        delete [] saved;
         //cout << "loop" << endl;
+        ++total;
     }
 
     SDL_DestroyRenderer(renderer);
