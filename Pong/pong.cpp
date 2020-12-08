@@ -165,3 +165,6 @@ int main(int argc, char * argv[]) {
 }
 
 //g++ pong.cpp -Isdl2lib\include -Lsdl2lib\lib -w -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf -o test
+
+//for kevin
+//g++ pong.cpp -ISDL2-mingw32\include -L SDL2-mingw32\lib -w -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf -o compile/pong

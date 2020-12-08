@@ -1,0 +1,3 @@
+[submodule "Pong/googletest"]
+	path = Pong/googletest
+	url = https://github.com/google/googletest.git

@@ -1,2 +1,8 @@
 *.exe
 .vscode
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+MakeFile
+lib/
+test
