@@ -13,8 +13,6 @@
 using namespace std;
 
 class Text : public Object {
-    friend class GameRenderer; // so that GameRenderer can check which score to render
-
     // private members
     private:
         const char* words = "";
