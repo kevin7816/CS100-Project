@@ -150,7 +150,7 @@ int main(int argc, char * argv[]) {
 
     // render static Text
     Text* message = new Text("Press ESCAPE to exit", 50);
-    message->create_text(renderer);
+    // message->create_text(renderer);
     message->set_text_pos(300, 0); // settings related to the text's position needs to be called after create()
     // message->show(renderer);       // renders text
     gameRend.add(message);

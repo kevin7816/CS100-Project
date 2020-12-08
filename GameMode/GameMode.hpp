@@ -5,8 +5,6 @@
 #include <vector>
 
 class GameMode {
-    private: 
-
     public:
         GameMode() {}
 

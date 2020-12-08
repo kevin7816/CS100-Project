@@ -69,8 +69,10 @@ class Play : public GameMode {
 
             // initial scores
             score_r = new Text(to_string(score_right).c_str(), 100, make_pair(920,0), 1);
+            score_r->create(renderer);
             gameRend.add(score_r);
             score_l = new Text(to_string(score_left).c_str(), 100, make_pair(280,0), 0);
+            score_l->create(renderer);
             gameRend.add(score_l);
 
             serve(turn, score_left, score_right);
@@ -87,7 +89,7 @@ class Play : public GameMode {
                 left_paddle->get_input();
                 right_paddle->get_input();
                 
-                gameRend.render_all(renderer, frameCount, timerFPS, lastFrame, score_left, score_right);
+                gameRend.render_all(renderer, frameCount, timerFPS, lastFrame);
             }
 
             return;
@@ -152,9 +154,11 @@ class Play : public GameMode {
                 // turn = 0; // change turn
                 score_right++;
 
+                // create new Text object for new score and delete old object
                 gameRend.remove(score_r);
                 delete score_r;
                 score_r = new Text(to_string(score_right).c_str(), 100, make_pair(920,0), 1);
+                score_r->create(renderer);
                 gameRend.add(score_r);
 
                 serve(turn, score_left, score_right);
@@ -163,9 +167,11 @@ class Play : public GameMode {
                 // turn = 1; // change turn
                 score_left++;
 
+                // create new Text object for new score and delete old object
                 gameRend.remove(score_l);
                 delete score_l;
                 score_l = new Text(to_string(score_left).c_str(), 100, make_pair(280,0), 0);
+                score_l->create(renderer);
                 gameRend.add(score_l);
 
                 serve(turn, score_left, score_right);

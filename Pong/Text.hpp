@@ -4,6 +4,7 @@
 #include "sdl2lib/include/SDL2/SDL.h"
 #include "sdl2lib/include/SDL2/SDL_ttf.h"
 #include "Object.hpp"
+#include "../definitions.hpp"
 #include <iostream>
 #include <string>
 #include <cstring>
@@ -13,11 +14,11 @@ using namespace std;
 
 class Text : public Object {
     friend class GameRenderer; // so that GameRenderer can check which score to render
+
     // private members
     private:
         const char* words = "";
         pair<int, const char*> score = make_pair(-1, words); // -1 == not a score; 0 == score_left; 1 == score_right
-        const char* font = "pixel.ttf";
         double size = 100;
         TTF_Font* text_font = nullptr;
         SDL_Surface* text_surface = nullptr;
@@ -31,7 +32,7 @@ class Text : public Object {
 
         Text(const char* words, double size) : words(words), size(size) {};
             
-        Text(const char* words, const char* font, double size, SDL_Color color) : words(words), font(font), size(size), color(color) {};
+        Text(const char* words, double size, SDL_Color color) : words(words), size(size), color(color) {};
 
         Text(const char* words, double size, pair<int,int> pos, int s) : words(words), size(size) {
             text_rect.x = pos.first;
@@ -43,16 +44,17 @@ class Text : public Object {
         // destructor
         ~Text() {
             SDL_DestroyTexture(text_texture);
-            SDL_FreeSurface(text_surface);
             TTF_CloseFont(text_font);
+            text_texture = nullptr;
+            text_font = nullptr;
         }
         
         // public functions
-        void show(SDL_Renderer* renderer) {
-            text_font = TTF_OpenFontIndex(font, size, 0); // change last argument if font has different font faces
+        void create(SDL_Renderer* renderer) {
+            // open font
+            text_font = TTF_OpenFontIndex(FONT, size, 0); // change last argument if font has different font faces
             if (text_font == nullptr) { 
-                TTF_SetError("Loading failed :( (code: %d)", 142);
-                cout << "Error: " << TTF_GetError() << endl;
+                fprintf(stderr, "Could not open font\n", SDL_GetError());
                 return;
             }
 
@@ -62,7 +64,12 @@ class Text : public Object {
             // create text_surface, and text_texture for surface
             text_surface = TTF_RenderText_Solid(text_font, words, color);
             text_texture = SDL_CreateTextureFromSurface(renderer, text_surface);
+            SDL_FreeSurface(text_surface); // done creating texture from surface -> can free surface immediately
+            text_surface = nullptr;
 
+            return;
+        }
+        void show(SDL_Renderer* renderer) {
             // display text
             SDL_RenderCopy(renderer, text_texture, NULL, &text_rect);
             // SDL_RenderPresent(renderer);

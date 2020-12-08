@@ -10,6 +10,7 @@
 int main(int argc, char * argv[]) {
     srand(time(0));
 
+    // init
     if(SDL_Init(SDL_INIT_VIDEO) != 0) {
         fprintf(stderr, "Could not init SDL: %s\n", SDL_GetError());
         return 1;
@@ -24,22 +25,21 @@ int main(int argc, char * argv[]) {
         fprintf(stderr, "Could not create renderer\n");
         return 1;
     }
-
     TTF_Init();
     if (TTF_Init() < 0) {
         fprintf(stderr, "Could not init TTF\n", SDL_GetError());
         return 1;
     }
 
+    // run game
     Play play_mode;  
     play_mode.setup(renderer);
-    play_mode.run_game(renderer);  
+    play_mode.run_game(renderer);
 
-    // SDL_FreeSurface(text_surface);
-    // TTF_CloseFont(text_font);
-    TTF_Quit();
+    // clean up
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
+    TTF_Quit();
     SDL_Quit();
 
     return 0;
