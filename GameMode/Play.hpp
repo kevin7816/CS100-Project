@@ -68,10 +68,10 @@ class Play : public GameMode {
             static int lastTime = 0;
 
             // initial scores
-            score_r = new Text(to_string(score_right).c_str(), 100, make_pair(920,0), 1);
+            score_r = new Text(score_right, 100, make_pair(920,0), 1);
             score_r->create(renderer);
             gameRend.add(score_r);
-            score_l = new Text(to_string(score_left).c_str(), 100, make_pair(280,0), 0);
+            score_l = new Text(score_left, 100, make_pair(280,0), 0);
             score_l->create(renderer);
             gameRend.add(score_l);
 
@@ -157,7 +157,7 @@ class Play : public GameMode {
                 // create new Text object for new score and delete old object
                 gameRend.remove(score_r);
                 delete score_r;
-                score_r = new Text(to_string(score_right).c_str(), 100, make_pair(920,0), 1);
+                score_r = new Text(score_right, 100, make_pair(920,0), 1);
                 score_r->create(renderer);
                 gameRend.add(score_r);
 
@@ -170,7 +170,7 @@ class Play : public GameMode {
                 // create new Text object for new score and delete old object
                 gameRend.remove(score_l);
                 delete score_l;
-                score_l = new Text(to_string(score_left).c_str(), 100, make_pair(280,0), 0);
+                score_l = new Text(score_left, 100, make_pair(280,0), 0);
                 score_l->create(renderer);
                 gameRend.add(score_l);
 

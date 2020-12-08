@@ -34,7 +34,8 @@ class Text : public Object {
             
         Text(const char* words, double size, SDL_Color color) : words(words), size(size), color(color) {};
 
-        Text(const char* words, double size, pair<int,int> pos, int s) : words(words), size(size) {
+        Text(int num, double size, pair<int,int> pos, int s) : size(size) { // for score
+            words = to_string(num).c_str();
             text_rect.x = pos.first;
             text_rect.y = pos.second;
             score.first = s;
