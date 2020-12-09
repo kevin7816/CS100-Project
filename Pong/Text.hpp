@@ -1,8 +1,8 @@
 #ifndef __TEXT_HPP__
 #define __TEXT_HPP__
 
-#include "sdl2lib/include/SDL2/SDL.h"
-#include "sdl2lib/include/SDL2/SDL_ttf.h"
+#include "../sdl2lib/include/SDL2/SDL.h"
+#include "../sdl2lib/include/SDL2/SDL_ttf.h"
 #include "Object.hpp"
 #include <iostream>
 #include <string>
@@ -41,7 +41,7 @@ class Text : public Object {
             text_rect.x = pos.first;
             text_rect.y = pos.second;
         };
-        
+
         // destructor
         ~Text() {
             SDL_DestroyTexture(text_texture);
@@ -49,7 +49,7 @@ class Text : public Object {
             text_texture = nullptr;
             text_font = nullptr;
         }
-        
+
         // public functions
         void create(SDL_Renderer* renderer) {
             // open font
@@ -131,15 +131,15 @@ class Text : public Object {
             int text_h = 0;
 
             if ((TTF_SizeText(text_font, words, &text_w, &text_h) != -1)) { // get and store the string's width and height to w and h
-                // do nothing. just need text_w and text_h to be passed in values            
-            } 
+                // do nothing. just need text_w and text_h to be passed in values
+            }
             else {
                 cout << "Failed loading width and height of text";
                 return;
             }
             // set width and height of text_rect based on size of text
-            width = text_w; 
-            height = text_h; 
+            width = text_w;
+            height = text_h;
 
             return;
         }

@@ -43,8 +43,16 @@ void update(Player* left_paddle, Ball* ball){
         double rel= (left_paddle->getY()+(left_paddle->getH()/2))-(ball->getY()+8);
         double norm = rel/(left_paddle->getH()/2);
         double bounce = norm * (5*PI/12);
-        ball->setVelX((ball->getSpeed()*1)*cos(bounce));
-        ball->setVelY((ball->getSpeed())*-sin(bounce));
+        double num= (rand() % 360);
+        // while (abs(sin(num)) > 0.7) {
+        //     //cout << "do over" << endl;
+        //     num= (rand() % 360);
+        // }
+        //ball->setVelX((ball->getSpeed()*1)*cos(bounce));
+        //ball->setVelY((ball->getSpeed())*-sin(bounce));
+        ball->setVelX((ball->getSpeed()*1)*abs(cos(num)));                               //sends ball at different angle based on where the ball has hit the paddle
+        //ball->setVelY((ball->getSpeed())*abs(sin(num)));
+        ball->setVelY((ball->getSpeed())*sin(num));
     }
     //if(ball->getX()<=0) handler.serve(ball);                                   //checks to see if ball has reacted the left or right side to score point
     if(ball->getY()<=0 || ball->getY()+16>=HEIGHT) ball->setVelY(ball->getVelY()*-1);       //check to see if ball hit top or bottom walls
@@ -61,7 +69,9 @@ void input(bool &running) {
     SDL_Event e;
     const Uint8 *keystates = SDL_GetKeyboardState(NULL);
     while(SDL_PollEvent(&e)) if(e.type==SDL_QUIT) running = false;                          //allows for key inputs
-    if(keystates[SDL_SCANCODE_ESCAPE]) running = false;
+    if(keystates[SDL_SCANCODE_ESCAPE]) {
+        running = false;
+    }
 
     return;
 }
@@ -94,11 +104,11 @@ int main(int argc, char * argv[]) {
     static int lastTime=0;
 
     Controller* left_controller = new User(SDL_SCANCODE_W, SDL_SCANCODE_S);
-    Player* left_paddle = new Player(left_controller, 32,(HEIGHT/2)-(HEIGHT/8),(HEIGHT/4),12);
+    Player* left_paddle = new Player(left_controller, 32,(HEIGHT/2)-(HEIGHT/8),(HEIGHT),12); //height / 4 if actual paddle;
     gameRend.add(left_paddle);
 
-    NetworkParams params(3,3,10,3);
-    NetworkHandler handler(params, 0.05, 20);
+    NetworkParams params(4,3,1,5);
+    NetworkHandler handler(params, 0.05, 1200);
     handler.init_networks();
 
     handler.serve();
@@ -108,11 +118,11 @@ int main(int argc, char * argv[]) {
     // l_paddle.w=12;
 
     // render static Text
-    Text* message = new Text("Press ESCAPE to exit", 50);
-    message->create_text(renderer);
-    message->set_text_pos(300, 0); // settings related to the text's position needs to be called after create()
-    // message->show(renderer);       // renders text
-    gameRend.add(message);
+    // Text* message = new Text("Press ESCAPE to exit", 50);
+    // message->create_text(renderer);
+    // message->set_text_pos(300, 0); // settings related to the text's position needs to be called after create()
+    // // message->show(renderer);       // renders text
+    // gameRend.add(message);
 
 
     while(running){
@@ -129,20 +139,44 @@ int main(int argc, char * argv[]) {
             }
         }
         handler.update();
+        //cout << "jasldfjlk" << endl;
         input(running);
         left_paddle->get_input();
 
         //render(frameCount, timerFPS, lastFrame, renderer, left_paddle, right_paddle, ball, message);
-        gameRend.render_all(renderer, frameCount, timerFPS, lastFrame, handler.getObjects());
+        if (handler.get_nth_generation() % 500 == 0 || handler.get_nth_generation() == 1) {
+            gameRend.render_all(renderer, frameCount, timerFPS, lastFrame, handler.getObjects());
+        }
     }
 
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
 
+    char input = 0;
+    while (input != 'y' && input != 'n') {
+        cout << "would you like to save? y/n: " << endl;
+        cin >> input;
+        cout << endl;
+    }
+    if (input == 'y') {
+        unsigned num_input = -1;
+        while (num_input < 0 ||  num_input > NUM_FITTEST) {
+            cout << "How many networks would you like to save? Upper Limit: " << NUM_FITTEST << endl;
+            cin >> num_input;
+            cout << endl;
+        }
+        handler.save(num_input);
+    }
+
+    system("PAUSE");
+
     return 0;
 }
 
 //g++ pong.cpp -Isdl2lib\include -Lsdl2lib\lib -w -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf -o compile/test
+//g++ pong.cpp -I..\sdl2lib\include -L..\sdl2lib\lib -w -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf -o ../compile/test
 
-//g++ Train.cpp -ISDL2-mingw32\include -L SDL2-mingw32\lib -w -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf -o Pong/compile/train
+//g++ Train.cpp -I..\SDL2-mingw32\include -L ..\SDL2-mingw32\lib -w -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf -o ../compile/train
+
+//g++ Train.cpp -ISDL2-mingw32\include -L SDL2-mingw32\lib -w -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf -o compile/train

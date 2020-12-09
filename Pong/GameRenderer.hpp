@@ -1,10 +1,12 @@
 #ifndef __GAMERENDERER_H__
 #define __GAMERENDERER_H__
 
-#include "sdl2lib/include/SDL2/SDL.h"
+#include "../sdl2lib/include/SDL2/SDL.h"
 #include "Object.hpp"
 #include <iostream>
 #include <vector>
+
+using namespace std;
 
 class GameRenderer {
     friend class GRTests;
@@ -38,12 +40,14 @@ class GameRenderer {
 
             return;
         }
-        // void render_all(SDL_Renderer * renderer, int frameCount, int timerFPS, int lastFrame, vector<Object*> objects) {
-        //     render_all(renderer, frameCount, timerFPS, lastFrame);
-        //     for (unsigned i = 0; i < objects.size(); ++i) {
-        //         objects.at(i)->show(renderer);
-        //     }
-        // }
+        void render_all(SDL_Renderer * renderer, int frameCount, int timerFPS, int lastFrame, vector<Object*> objects) {
+            render_all(renderer, frameCount, timerFPS, lastFrame);
+            for (unsigned i = 0; i < objects.size(); ++i) {
+                objects.at(i)->show(renderer);
+            }
+            objects.clear();
+        }
+  
         void add(Object* object) {
             for (auto i : gameObjects) {
                 if (i == object) { // object is already in vector

@@ -1,7 +1,7 @@
 #ifndef __PLAYER_H__
 #define __PLAYER_H__
 
-#include "sdl2lib/include/SDL2/SDL.h"
+#include "../sdl2lib/include/SDL2/SDL.h"
 #include "Object.hpp"
 #include "Controller.hpp"
 
@@ -10,6 +10,9 @@ class Player : public Object {
         SDL_Rect rect;
         Controller* controller;
         SDL_Color color;
+
+        unsigned fitness;
+        unsigned previousY;
     public:
         void get_input() {
             controller->move(this);
@@ -24,6 +27,29 @@ class Player : public Object {
             rect.y=y;
             rect.h=h;
             rect.w=w;
+
+            fitness = 0;
+            previousY = rect.y;
+        }
+        ~Player() {
+            delete controller;
+        }
+
+        double get_previousY() {
+            return previousY;
+        }
+        void set_previousY(double x) {
+            previousY = x;
+        }
+        unsigned get_fitness() {
+            return fitness;
+        }
+        void increment_fittness() {
+            ++fitness;
+        }
+
+        Controller* getController() {
+            return controller;
         }
         double getH(){
             return rect.h;
@@ -58,6 +84,9 @@ class Player : public Object {
             color.r = fRand(0,255);
             color.g = fRand(0,255);
             color.b = fRand(0,255);
+        }
+        SDL_Color get_color() {
+            return color;
         }
         SDL_Rect getRect(){
             return rect;

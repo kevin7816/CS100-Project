@@ -16,6 +16,9 @@ public:
             case 3:
                 set_3_activations(player, activations);
                 break;
+            case 4:
+                set_4_activations(player, activations);
+                break;
             case 5:
                 set_5_activations(player, activations);
                 break;
@@ -31,8 +34,17 @@ public:
 private:
     void set_3_activations(Player* player, float* activations) {
         activations[0] = normalize(ball->getX(), 32, WIDTH - 32);
+        //cout << activations[0] << endl;
         activations[1] = normalize(ball->getY(), 0, HEIGHT);
         activations[2] = normalize(player->getY(), 0, HEIGHT);
+    }
+
+    void set_4_activations(Player* player, float* activations) {
+        activations[0] = normalize(ball->getX(), 32, WIDTH - 32);
+        //cout << activations[0] << endl;
+        activations[1] = normalize(ball->getY(), 0, HEIGHT);
+        activations[2] = normalize(player->getY(), 0, HEIGHT);
+        activations[3] = normalize(ball->getVelX(), -BALL_SPEED + 2, BALL_SPEED - 2);
     }
 
     void set_5_activations(Player* player, float* activations) {
@@ -42,9 +54,10 @@ private:
         activations[3] = normalize(ball->getVelY(), -BALL_SPEED + 2, BALL_SPEED - 2);
         activations[4] = normalize(player->getY(), 0, HEIGHT);
 
-        for (unsigned i = 0; i < 5; ++i) {
-            std::cout << activations[i] << ' ';
-        }
+        // for (unsigned i = 0; i < 5; ++i) {
+        //     std::cout << activations[i] << ' ';
+        // }
+        // std::cout << std::endl;
     }
 
     void set_6_activations(Player* player, float* activations) {

@@ -2,7 +2,7 @@
 #define __BALL_H__
 
 
-#include "sdl2lib/include/SDL2/SDL.h"
+#include "../sdl2lib/include/SDL2/SDL.h"
 #include "Object.hpp"
 #include "../definitions.hpp"
 
@@ -12,18 +12,27 @@ class Ball : public Object {
         double velX=0;
         double velY=0;
         SDL_Rect rect;
+        SDL_Color color;
     public:
         Ball() {
             rect.x=0;
             rect.y=0;
             rect.h=16;
             rect.w=16;
+            color.r = 255;
+            color.g = 255;
+            color.b = 255;
+            color.a = 255;
         }
         Ball(double x, double y) {
             rect.x=x;
             rect.y=y;
             rect.h=16;
             rect.w=16;
+            color.r = 255;
+            color.g = 255;
+            color.b = 255;
+            color.a = 255;
         }
         double getH(){
             return rect.h;
@@ -67,8 +76,14 @@ class Ball : public Object {
         double getVelY(){
             return velY;
         }
+        void set_color(SDL_Color new_color) {
+            color.r = new_color.r;
+            color.g = new_color.g;
+            color.b = new_color.b;
+            color.a = new_color.a;
+        }
         void show(SDL_Renderer* renderer){
-            SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+            SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
             SDL_RenderFillRect(renderer, &rect);
             // SDL_RenderPresent(renderer);
         }
