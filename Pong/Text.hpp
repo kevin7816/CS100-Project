@@ -32,10 +32,6 @@ class Text : public Object {
             
         Text(const char* words, double size, SDL_Color color) : words(words), size(size), color(color) {};
 
-        Text(int num) { // for score
-            words = to_string(num).c_str();
-        };
-
         Text(const char* words, double size, pair<int,int> pos) : words(words), size(size) { // for score
             // words = to_string(num).c_str();
             text_rect.x = pos.first;

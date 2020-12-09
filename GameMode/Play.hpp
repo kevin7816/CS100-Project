@@ -1,12 +1,7 @@
 #ifndef __PLAY_H__
 #define __PLAY_H__
 
-
-#include "../Pong/sdl2lib/include/SDL2/SDL.h"
-#include "../definitions.hpp"
-
-#include "GameMode.hpp"
-#include "../Pong/GameRenderer.hpp"
+#include "Gamemode.hpp"
 #include "../Pong/Player.hpp"
 #include "../Pong/Ball.hpp"
 #include "../Pong/Text.hpp"
@@ -14,10 +9,9 @@
 
 #include <cmath>
 
-class Play : public GameMode {
+class Play : public Gamemode {
     friend class PlayTests; // for unit testing purpose
     private:
-        GameRenderer gameRend;
         Controller* left_controller = nullptr;
         Player* left_paddle = nullptr;
         Controller* right_controller = nullptr;
@@ -25,12 +19,17 @@ class Play : public GameMode {
         Ball* ball = nullptr;
         Text* score_l = nullptr;
         Text* score_r = nullptr;
+        int score_left = 0;
+        int score_right = 0;
+        bool turn = 0; // turn is 1 or 0 == player 1'turn or player 2's turn
 
     public:
-        Play() : GameMode() {}
+        Play() : Gamemode() {
+            if (TTF_Init() < 0) {
+                fprintf(stderr, "Could not init TTF\n", SDL_GetError());
+                throw "Could not init TTF\n";
+            }
 
-        // create game objects
-        void setup(SDL_Renderer* renderer) {
             // set up left user player
             left_controller = new User(SDL_SCANCODE_W, SDL_SCANCODE_S);
             left_paddle = new Player(left_controller, 32, (HEIGHT/2)-(HEIGHT/8), (HEIGHT/4), 12);
@@ -54,18 +53,6 @@ class Play : public GameMode {
             gameRend.add(right_paddle);
             gameRend.add(ball);
 
-            return;
-        }
-
-        // render all objects on screen and run the game
-        void run_game(SDL_Renderer* renderer) {
-            int score_left = 0, score_right = 0;
-
-            bool running = 1;
-            bool turn = 0; // turn is 1 or 0 == player 1'turn or player 2's turn
-            int frameCount, timerFPS, lastFrame, fps;
-            static int lastTime = 0;
-
             // initial scores
             score_r = new Text(to_string(score_right).c_str(), 100, make_pair(920,0));
             score_r->create(renderer);
@@ -75,30 +62,46 @@ class Play : public GameMode {
             gameRend.add(score_l);
 
             serve(turn);
+        }
 
-            while(running){
-                lastFrame = SDL_GetTicks();
-                if(lastFrame >= (lastTime + 1000)) {
-                    lastTime = lastFrame;
-                    fps = frameCount;
-                    frameCount = 0;
-                }
-                update(renderer, turn, score_left, score_right);
-                input(running);
-                left_paddle->get_input();
-                right_paddle->get_input();
-                
-                gameRend.render_all(renderer, frameCount, timerFPS, lastFrame);
+        ~Play() {
+            SDL_DestroyRenderer(renderer);
+            SDL_DestroyWindow(window);
+            TTF_Quit();
+            SDL_Quit();
+
+            delete left_controller;
+            delete left_paddle;
+            delete right_controller;
+            delete right_paddle;
+            delete ball;
+            delete score_l;
+            delete score_r;
+        }
+
+        // render all objects on screen and run the game
+        void update(bool &running) {
+            lastFrame = SDL_GetTicks();
+            if(lastFrame >= (lastTime + 1000)) {
+                lastTime = lastFrame;
+                fps = frameCount;
+                frameCount = 0;
             }
+            update(renderer, turn, score_left, score_right);
+            input(running);
+            left_paddle->get_input();
+            right_paddle->get_input();
+            
+            gameRend.render_all(renderer, frameCount, timerFPS, lastFrame);    
 
             return;
         }
 
     private:
-        void serve(bool &turn){ // const int &score_left, const int &score_right <- parameters to cout scores
-            // // cout scores in a new serve
-            // cout << "Player LEFT: " << score_left << endl;
-            // cout << "Player RIGHT: " << score_right << endl << endl;
+        void serve(bool &turn){ 
+            // cout scores in a new serve
+            cout << "Player LEFT: " << score_left << endl;
+            cout << "Player RIGHT: " << score_right << endl << endl;
 
             if(turn) { // turn == 1 == left's turn to serve
                 left_paddle->setY((HEIGHT/2) - (left_paddle->getH())/2); //sets the paddles in place

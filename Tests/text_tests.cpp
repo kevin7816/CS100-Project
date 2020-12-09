@@ -148,11 +148,11 @@ int main(int argc, char * argv[]) {
     test.constructor_tests(3, message, message->get_words(), message->get_size(), message->get_pos(), message->get_color_r(), message->get_color_g(), message->get_color_b(), message->get_color_a());
     delete message;
 
-    message = new Text(10);
+    message = new Text(to_string(10).c_str());
     test.constructor_tests(4, message, message->get_words(), message->get_size(), message->get_pos(), message->get_color_r(), message->get_color_g(), message->get_color_b(), message->get_color_a());
     delete message;
 
-    message = new Text(100, 90, make_pair(0,0));
+    message = new Text(to_string(100).c_str(), 90, make_pair(0,0));
     test.constructor_tests(5, message, message->get_words(), message->get_size(), message->get_pos(), message->get_color_r(), message->get_color_g(), message->get_color_b(), message->get_color_a());
     delete message;
 
@@ -170,11 +170,11 @@ int main(int argc, char * argv[]) {
     test.function_tests(message);
     delete message;
 
-    message = new Text(10);
+    message = new Text(to_string(10).c_str());
     test.function_tests(message);
     delete message;
 
-    message = new Text(100, 90, make_pair(0,0));
+    message = new Text(to_string(100).c_str(), 90, make_pair(0,0));
     test.function_tests(message);
     delete message;
 
