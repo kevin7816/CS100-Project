@@ -148,7 +148,7 @@ public:
     void save(unsigned num_saves) {
         string file_name;
         if (num_saves > 1) {
-            wstring new_folder(L"../../saves/save_state_");
+            wstring new_folder(L"../saves/save_state_");
             srand(summnation());
             unsigned ID_SIZE = 10;
             for (unsigned i = 0; i < ID_SIZE; ++i) {
@@ -203,14 +203,24 @@ private:
     }
 
     void kill(Player* paddle, Ball* ball) {
-        float fitness = paddle->get_fitness() + paddle->getController()->get_fitness();
+        float fitness = paddle->get_fitness();
+        if (fitness < 50) {
+            fitness += paddle->getController()->get_fitness();
+        }
         if (best_networks.size() < NUM_FITTEST) {
             NeuralNetwork* nn = new NeuralNetwork((paddle->getController()->getNetwork()), network_params);
             best_networks.push_back(make_pair(nn, fitness));
         }
         else {
             for (unsigned i = 0; i < best_networks.size(); ++i) {
-                if (*best_networks.at(i).first == *paddle->getController()->getNetwork()) break;
+                if (*best_networks.at(i).first == *paddle->getController()->getNetwork()) {
+                    if (fitness > best_networks.at(i).second) {
+                        best_networks.at(i).second = fitness;
+                    }
+                    //if (fitness > 100) best_networks.at(i).second = (best_networks.at(i).second + fitness) / 2.0;
+                    //else best_networks.at(i).second -= 0.1;
+                    break;
+                }
                 if (best_networks.at(i).second <= fitness) {
                     //cout << best_networks.size() << endl;
                     //cout << fitness << " saving network" << endl;
@@ -276,9 +286,13 @@ private:
             else if (i % 3 == 0) {
                 unsigned mutation_index = fRand(0, best_networks.size()-0.1);
 
-                AI* child = new AI(new Sensor(balls[i]), network_params, best_networks.at(mutation_index).first, best_networks.at(mutation_index).first, mutation_rate);
-                child->getNetwork()->forward_propagation();
-                players[i] = new Player(child, 32,(HEIGHT/2)-(HEIGHT/8),(HEIGHT/HEIGHT_RATIO),12);
+                if (best_networks.at(mutation_index).second < 15) {
+                    players[i] = new Player(new AI(new Sensor(balls[i]), new NeuralNetwork(network_params)), 32,(HEIGHT/2)-(HEIGHT/8),(HEIGHT/HEIGHT_RATIO),12);
+                }
+                else {
+                    AI* child = new AI(new Sensor(balls[i]), network_params, best_networks.at(mutation_index).first, best_networks.at(mutation_index).first, mutation_rate);
+                    players[i] = new Player(child, 32,(HEIGHT/2)-(HEIGHT/8),(HEIGHT/HEIGHT_RATIO),12);
+                }
             }
             else {
                 unsigned dad_index = fRand(0, best_networks.size()-1);
@@ -293,11 +307,11 @@ private:
             balls[i]->set_color(players[i]->get_color());
         }
 
-        rendered_indices.clear();
         for (unsigned i = 0; i < best_networks.size(); ++i) {
             best_networks.at(i).second -= 0.1;
         }
-        // best_networks.clear();
+
+        rendered_indices.clear();
         fittest = 0;
         num_alive = generation_size;
     }

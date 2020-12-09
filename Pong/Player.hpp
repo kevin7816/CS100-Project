@@ -1,7 +1,7 @@
 #ifndef __PLAYER_H__
 #define __PLAYER_H__
 
-#include "sdl2lib/include/SDL2/SDL.h"
+#include "../sdl2lib/include/SDL2/SDL.h"
 #include "Object.hpp"
 #include "Controller.hpp"
 

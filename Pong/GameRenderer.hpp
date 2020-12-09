@@ -1,10 +1,12 @@
 #ifndef __GAMERENDERER_H__
 #define __GAMERENDERER_H__
 
-#include "sdl2lib/include/SDL2/SDL.h"
+#include "../sdl2lib/include/SDL2/SDL.h"
 #include "Object.hpp"
 #include <iostream>
 #include <vector>
+
+using namespace std;
 
 class GameRenderer {
     private:

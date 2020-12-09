@@ -1,7 +1,7 @@
 #ifndef __CONTROLLER_H__
 #define __CONTROLLER_H__
 
-#include "sdl2lib/include/SDL2/SDL.h"
+#include "../sdl2lib/include/SDL2/SDL.h"
 #include "../definitions.hpp"
 
 class Player;

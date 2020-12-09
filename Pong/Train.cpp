@@ -175,5 +175,8 @@ int main(int argc, char * argv[]) {
 }
 
 //g++ pong.cpp -Isdl2lib\include -Lsdl2lib\lib -w -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf -o compile/test
+//g++ pong.cpp -I..\sdl2lib\include -L..\sdl2lib\lib -w -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf -o ../compile/test
+
+//g++ Train.cpp -I..\SDL2-mingw32\include -L ..\SDL2-mingw32\lib -w -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf -o ../compile/train
 
 //g++ Train.cpp -ISDL2-mingw32\include -L SDL2-mingw32\lib -w -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf -o compile/train
