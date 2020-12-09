@@ -44,15 +44,15 @@ void update(Player* left_paddle, Ball* ball){
         double norm = rel/(left_paddle->getH()/2);
         double bounce = norm * (5*PI/12);
         double num= (rand() % 360);
-        while (abs(sin(num)) > 0.7) {
-            //cout << "do over" << endl;
-            num= (rand() % 360);
-        }
+        // while (abs(sin(num)) > 0.7) {
+        //     //cout << "do over" << endl;
+        //     num= (rand() % 360);
+        // }
         //ball->setVelX((ball->getSpeed()*1)*cos(bounce));
         //ball->setVelY((ball->getSpeed())*-sin(bounce));
         ball->setVelX((ball->getSpeed()*1)*abs(cos(num)));                               //sends ball at different angle based on where the ball has hit the paddle
-        ball->setVelY((ball->getSpeed())*abs(sin(num)));
-        //ball->setVelY((ball->getSpeed())*sin(num));
+        //ball->setVelY((ball->getSpeed())*abs(sin(num)));
+        ball->setVelY((ball->getSpeed())*sin(num));
     }
     //if(ball->getX()<=0) handler.serve(ball);                                   //checks to see if ball has reacted the left or right side to score point
     if(ball->getY()<=0 || ball->getY()+16>=HEIGHT) ball->setVelY(ball->getVelY()*-1);       //check to see if ball hit top or bottom walls
@@ -69,7 +69,9 @@ void input(bool &running) {
     SDL_Event e;
     const Uint8 *keystates = SDL_GetKeyboardState(NULL);
     while(SDL_PollEvent(&e)) if(e.type==SDL_QUIT) running = false;                          //allows for key inputs
-    if(keystates[SDL_SCANCODE_ESCAPE]) running = false;
+    if(keystates[SDL_SCANCODE_ESCAPE]) {
+        running = false;
+    }
 
     return;
 }
@@ -142,7 +144,7 @@ int main(int argc, char * argv[]) {
         left_paddle->get_input();
 
         //render(frameCount, timerFPS, lastFrame, renderer, left_paddle, right_paddle, ball, message);
-        if (handler.get_nth_generation() % 500 == 0) {
+        if (handler.get_nth_generation() % 500 == 0 || handler.get_nth_generation() == 1) {
             gameRend.render_all(renderer, frameCount, timerFPS, lastFrame, handler.getObjects());
         }
     }
@@ -150,6 +152,24 @@ int main(int argc, char * argv[]) {
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
+
+    char input = 0;
+    while (input != 'y' && input != 'n') {
+        cout << "would you like to save? y/n: " << endl;
+        cin >> input;
+        cout << endl;
+    }
+    if (input == 'y') {
+        unsigned num_input = -1;
+        while (num_input < 0 ||  num_input > NUM_FITTEST) {
+            cout << "How many networks would you like to save? Upper Limit: " << NUM_FITTEST << endl;
+            cin >> num_input;
+            cout << endl;
+        }
+        handler.save(num_input);
+    }
+
+    system("PAUSE");
 
     return 0;
 }

@@ -85,6 +85,9 @@ class Player : public Object {
             color.g = fRand(0,255);
             color.b = fRand(0,255);
         }
+        SDL_Color get_color() {
+            return color;
+        }
         SDL_Rect getRect(){
             return rect;
         }

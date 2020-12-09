@@ -11,6 +11,7 @@
 #include <vector>
 #include <math.h>
 #include <utility>      // std::pair, std::make_pair
+#include <string>
 
 using namespace std;
 
@@ -28,6 +29,7 @@ private:
     vector<unsigned> rendered_indices;
     vector<pair<NeuralNetwork*, float>> best_networks; // pair<neural_net, fitness
     unsigned num_alive;
+    unsigned prev_alive;
 
     Ball** balls;
     Player** players; //player holds ais
@@ -37,7 +39,7 @@ private:
 
 public:
     NetworkHandler(unsigned inputs, unsigned outputs, unsigned hidden_layers, unsigned hidden_layer_size, float mutation_rate, unsigned generation_size):
-    mutation_rate(mutation_rate), generation_size(generation_size), num_alive(generation_size), fittest(0), num_generations(0) {
+    mutation_rate(mutation_rate), generation_size(generation_size), num_alive(generation_size), prev_alive(0), fittest(0), num_generations(0) {
         network_params.inputs = inputs;
         network_params.outputs = outputs;
         network_params.hidden_layers = hidden_layers;
@@ -54,6 +56,7 @@ public:
             balls[i] = new Ball();
             players[i] = new Player(new AI(new Sensor(balls[i]), network_params), 32,(HEIGHT/2)-(HEIGHT/8),(HEIGHT/HEIGHT_RATIO),12);
             players[i]->randomize_color();
+            balls[i]->set_color(players[i]->get_color());
         }
 
         for (unsigned i = 0; i < NUM_RENDERED_AIS; ++i) { //only render the first 5 players
@@ -71,9 +74,10 @@ public:
                 update(players[i], balls[i]);
             }
         }
-        if (clock() % 50 == 0) {
+        if (clock() % 50 == 0 && num_alive != prev_alive) {
             //system("CLS");
             cout << "num alive: " << num_alive << endl;
+            prev_alive = num_alive;
         }
 
         if (num_alive == 0) {
@@ -139,6 +143,38 @@ public:
 
     unsigned get_nth_generation() {
         return num_generations;
+    }
+
+    void save(unsigned num_saves) {
+        string file_name;
+        if (num_saves > 1) {
+            wstring new_folder(L"../../saves/save_state_");
+            srand(summnation());
+            unsigned ID_SIZE = 10;
+            for (unsigned i = 0; i < ID_SIZE; ++i) {
+                if (rand() % 2 == 0) {
+                    new_folder += rand() % 26 + 'a';
+                }
+                else {
+                    new_folder += rand() % 10 + '0';
+                }
+            }
+            if (_wmkdir(new_folder.c_str()) == -1) {
+                cout << "could not create new directory" << endl;
+            }
+            string temp(new_folder.begin(), new_folder.end());
+            file_name += temp;
+            file_name += "/";
+        }
+        else {
+            file_name += "../../saves/";
+        }
+        for (unsigned i = 0; i < num_saves; ++i) {
+            int score = best_networks.at(i).second-3;
+            if (score < 0) score = 0;
+            best_networks.at(i).first->save(file_name, score);
+        }
+        srand(time(0));
     }
 private:
     void update(Player* paddle, Ball* ball) {
@@ -246,6 +282,8 @@ private:
                 players[i] = new Player(child, 32,(HEIGHT/2)-(HEIGHT/8),(HEIGHT/HEIGHT_RATIO),12);
             }
             players[i]->randomize_color();
+            players[i]->randomize_color();
+            balls[i]->set_color(players[i]->get_color());
         }
 
         rendered_indices.clear();
@@ -255,6 +293,14 @@ private:
         // best_networks.clear();
         fittest = 0;
         num_alive = generation_size;
+    }
+
+    int summnation() {
+        float summnation = 0;
+        for (unsigned i = 0; i < best_networks.size(); ++i) {
+            summnation += best_networks.at(i).second;
+        }
+        return summnation;
     }
 };
 
