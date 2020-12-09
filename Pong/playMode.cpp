@@ -25,7 +25,7 @@ int main(int argc, char * argv[]) {
         fprintf(stderr, "Could not create renderer\n");
         return 1;
     }
-    TTF_Init();
+    // TTF_Init();
     if (TTF_Init() < 0) {
         fprintf(stderr, "Could not init TTF\n", SDL_GetError());
         return 1;

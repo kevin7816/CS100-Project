@@ -11,5 +11,4 @@ double PI = 3.14159265358979323846;
 
 double BALL_SPEED = 16.0;
 
-const char* FONT = "pixel.ttf"; // or compile/pixel.ttf if run directly from terminal
 #endif

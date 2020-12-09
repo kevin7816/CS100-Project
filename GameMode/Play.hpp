@@ -10,13 +10,12 @@
 #include "../Pong/Player.hpp"
 #include "../Pong/Ball.hpp"
 #include "../Pong/Text.hpp"
-#include "../Pong/Text.hpp"
 #include "../Pong/User.hpp"
 
-#include <iostream>
 #include <cmath>
 
 class Play : public GameMode {
+    friend class PlayTests; // for unit testing purpose
     private:
         GameRenderer gameRend;
         Controller* left_controller = nullptr;
@@ -68,14 +67,14 @@ class Play : public GameMode {
             static int lastTime = 0;
 
             // initial scores
-            score_r = new Text(score_right, 100, make_pair(920,0), 1);
+            score_r = new Text(score_right, 100, make_pair(920,0));
             score_r->create(renderer);
             gameRend.add(score_r);
-            score_l = new Text(score_left, 100, make_pair(280,0), 0);
+            score_l = new Text(score_left, 100, make_pair(280,0));
             score_l->create(renderer);
             gameRend.add(score_l);
 
-            serve(turn, score_left, score_right);
+            serve(turn);
 
             while(running){
                 lastFrame = SDL_GetTicks();
@@ -96,10 +95,10 @@ class Play : public GameMode {
         }
 
     private:
-        void serve(bool &turn, const int &score_left, const int &score_right){
-            // cout scores in a new serve
-            cout << "Player LEFT: " << score_left << endl;
-            cout << "Player RIGHT: " << score_right << endl << endl;
+        void serve(bool &turn){ // const int &score_left, const int &score_right <- parameters to cout scores
+            // // cout scores in a new serve
+            // cout << "Player LEFT: " << score_left << endl;
+            // cout << "Player RIGHT: " << score_right << endl << endl;
 
             if(turn) { // turn == 1 == left's turn to serve
                 left_paddle->setY((HEIGHT/2) - (left_paddle->getH())/2); //sets the paddles in place
@@ -156,12 +155,11 @@ class Play : public GameMode {
 
                 // create new Text object for new score and delete old object
                 gameRend.remove(score_r);
-                delete score_r;
-                score_r = new Text(score_right, 100, make_pair(920,0), 1);
+                score_r = new Text(score_right, 100, make_pair(920,0));
                 score_r->create(renderer);
                 gameRend.add(score_r);
 
-                serve(turn, score_left, score_right);
+                serve(turn);
             }
             if(ball->getX() -16 >= WIDTH) {
                 // turn = 1; // change turn
@@ -169,12 +167,11 @@ class Play : public GameMode {
 
                 // create new Text object for new score and delete old object
                 gameRend.remove(score_l);
-                delete score_l;
-                score_l = new Text(score_left, 100, make_pair(280,0), 0);
+                score_l = new Text(score_left, 100, make_pair(280,0));
                 score_l->create(renderer);
                 gameRend.add(score_l);
 
-                serve(turn, score_left, score_right);
+                serve(turn);
             }
 
             return;

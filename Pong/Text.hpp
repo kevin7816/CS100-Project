@@ -4,7 +4,6 @@
 #include "sdl2lib/include/SDL2/SDL.h"
 #include "sdl2lib/include/SDL2/SDL_ttf.h"
 #include "Object.hpp"
-#include "../definitions.hpp"
 #include <iostream>
 #include <string>
 #include <cstring>
@@ -16,13 +15,14 @@ class Text : public Object {
     // private members
     private:
         const char* words = "";
-        pair<int, const char*> score = make_pair(-1, words); // -1 == not a score; 0 == score_left; 1 == score_right
         double size = 100;
+        const char* font = "compile/pixel.ttf"; // or compile/pixel.ttf if run directly from terminal
+        SDL_Rect text_rect {0, 0, 100, 100}; // default pos == (0,0) and (w,h) == (100,100)
+        SDL_Color color = {255, 255, 255, 255}; // default white
         TTF_Font* text_font = nullptr;
         SDL_Surface* text_surface = nullptr;
         SDL_Texture* text_texture = nullptr;
-        SDL_Color color = {255, 255, 255, 255}; // default white
-        SDL_Rect text_rect;  
+       
 
     public:
         // constructors
@@ -32,12 +32,14 @@ class Text : public Object {
             
         Text(const char* words, double size, SDL_Color color) : words(words), size(size), color(color) {};
 
-        Text(int num, double size, pair<int,int> pos, int s) : size(size) { // for score
+        Text(int num) { // for score
+            words = to_string(num).c_str();
+        };
+
+        Text(int num, double size, pair<int,int> pos) : size(size) { // for score
             words = to_string(num).c_str();
             text_rect.x = pos.first;
             text_rect.y = pos.second;
-            score.first = s;
-            score.second = words;
         };
         
         // destructor
@@ -51,9 +53,9 @@ class Text : public Object {
         // public functions
         void create(SDL_Renderer* renderer) {
             // open font
-            text_font = TTF_OpenFontIndex(FONT, size, 0); // change last argument if font has different font faces
+            text_font = TTF_OpenFontIndex(font, size, 0); // change last argument if font has different font faces
             if (text_font == nullptr) { 
-                fprintf(stderr, "Could not open font\n", SDL_GetError());
+                throw "Could not open font";
                 return;
             }
 
@@ -62,7 +64,17 @@ class Text : public Object {
 
             // create text_surface, and text_texture for surface
             text_surface = TTF_RenderText_Solid(text_font, words, color);
+            if (text_surface == nullptr) {
+                throw "Could not create text surface";
+                return;
+            }
+
             text_texture = SDL_CreateTextureFromSurface(renderer, text_surface);
+            if (text_texture == nullptr) {
+                throw "Could not create text texture from text surface";
+                return;
+            }
+
             SDL_FreeSurface(text_surface); // done creating texture from surface -> can free surface immediately
             text_surface = nullptr;
 
@@ -75,22 +87,41 @@ class Text : public Object {
 
             return;
         }
-        void set_text_color(unsigned char r, unsigned char b, unsigned char g) {
-            color = {r, b, g, 255}; // default opacity = 255 = full
+
+        // setters
+        void set_text_color(int r, int g, int b) {
+            if (r > -1 && g > -1 && b > -1 && r < 256 && g < 256 && b < 256) {
+                color = {(uint8_t)r, (uint8_t)g, (uint8_t)b, 255}; // default opacity = 255 = full
+            }    
+            else 
+                throw "Invalid rbg values";
             return;
         }
         void set_text_size(double size) {
-            this->size = size;
+            if (size > 0)
+                this->size = size;
+            else 
+                throw "Invalid size";
             return;
         }
         void set_text_pos(int pos_x, int pos_y) { 
-            text_rect.x = pos_x;
-            text_rect.y = pos_y;
+            if (pos_x > -1 && pos_y > -1) {
+                text_rect.x = pos_x;
+                text_rect.y = pos_y;
+            }
+            else
+                throw "Invalid position";
             return;
         }
-        int get_text_pos_x() { 
-            return text_rect.x;
-        }
+
+        // getters
+        string get_words() { return string(words); }
+        double get_size() { return size; }
+        pair<int,int> get_pos() { return make_pair(text_rect.x, text_rect.y); }
+        int get_color_r() { return color.r; }
+        int get_color_b() { return color.b; }
+        int get_color_g() { return color.g; }
+        int get_color_a() { return color.a; }
     
     // private functions
     private:
@@ -103,7 +134,8 @@ class Text : public Object {
                 // do nothing. just need text_w and text_h to be passed in values            
             } 
             else {
-                cout << "Failed loading width and height of text." << endl;
+                cout << "Failed loading width and height of text";
+                return;
             }
             // set width and height of text_rect based on size of text
             width = text_w; 

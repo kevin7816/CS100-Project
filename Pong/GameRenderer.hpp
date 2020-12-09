@@ -3,11 +3,11 @@
 
 #include "sdl2lib/include/SDL2/SDL.h"
 #include "Object.hpp"
-#include "Text.hpp"
 #include <iostream>
 #include <vector>
 
 class GameRenderer {
+    friend class GRTests;
     private:
         std::vector<Object*> gameObjects;
     public:
@@ -45,16 +45,25 @@ class GameRenderer {
         //     }
         // }
         void add(Object* object) {
+            for (auto i : gameObjects) {
+                if (i == object) { // object is already in vector
+                    throw "Object is already in vector";
+                    return;
+                }
+            }
             gameObjects.push_back(object);
             return;
         }
         void remove(Object* object) {
             for (unsigned i = 0; i < gameObjects.size(); i++) {
                 if (gameObjects.at(i) == object) {
+                    
+                    delete gameObjects.at(i);
                     gameObjects.erase(gameObjects.begin() + i);
-                    break;
+                    return;
                 }
             }
+            throw "Object is not in vector"; 
             return;
         }
 };
