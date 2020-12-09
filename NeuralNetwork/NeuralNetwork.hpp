@@ -7,6 +7,10 @@
 #include <fstream>
 #include <ctime>
 
+#include <cassert>
+#include <utility>
+#include <type_traits>
+
 using namespace std;
 
 struct NetworkParams {
@@ -172,7 +176,45 @@ public:
         num_layers += 2;
         fin >> hidden_layer_size;
 
-        this->NeuralNetwork(inputs, outputs, num_layers - 2, hidden_layer_size);
+        //initializing the weights in the adjacency matrices
+        adjacency_matrices = new float**[num_layers]; //all layers have a adjacency matrix except for input layer
+        for (unsigned index = 0; index < num_layers-1; ++index) {
+            if (index == 0) { //first adjacency_matrix is under the second layer
+                adjacency_matrices[index] = new float*[hidden_layer_size];
+                init_layer(index, hidden_layer_size, inputs);
+            }
+
+            else if (index == num_layers-2) { //last adjacency matrix on the output layer
+                adjacency_matrices[index] = new float*[outputs];
+                init_layer(index, outputs, hidden_layer_size);
+            }
+
+            else { // hidden layers connected to hidden layers
+                adjacency_matrices[index] = new float*[hidden_layer_size];
+                init_layer(index, hidden_layer_size, hidden_layer_size);
+            }
+        }
+
+        //initializing the biases and activations
+        biases = new float*[num_layers];
+        activations = new float*[num_layers];
+        for (unsigned i = 0; i < num_layers; ++i) {
+            if (i == 0) { //input layer
+                biases[i] = new float[inputs];
+                activations[i] = new float[inputs];
+                init_nodes(i, inputs);
+            }
+            else if (i == num_layers - 1) { //output layer
+                biases[i] = new float[outputs];
+                activations[i] = new float[outputs];
+                init_nodes(i, outputs);
+            }
+            else { //hidden_layers
+                biases[i] = new float[hidden_layer_size];
+                activations[i] = new float[hidden_layer_size];
+                init_nodes(i, hidden_layer_size);
+            }
+        }
     }
 
     string save(string directory, unsigned fitness) const {
@@ -323,11 +365,51 @@ public:
         }
     }
 
-    float*** get_weights() {
+    bool operator==(const NeuralNetwork & nn) const {
+        for(unsigned i = 0; i < num_layers; ++i) {
+            unsigned size = hidden_layer_size;
+            if ( i == 0) {
+                size = inputs;
+            }
+            else if (i == num_layers-1) {
+                size = outputs;
+            }
+            for (unsigned j = 0; j < size; ++j) {
+                if (biases[i][j] != nn.get_biases()[i][j]) return false;
+            }
+        }
+
+        //copy weights
+        for (unsigned index = 0; index < num_layers-1; ++index) {
+            unsigned rows = hidden_layer_size;
+            unsigned cols = hidden_layer_size;
+            if (index == 0) {
+                cols = inputs;
+            }
+            if (index == num_layers-2) {
+                rows = outputs;
+            }
+            for (unsigned i = 0; i < rows; ++i) {
+                for (unsigned j = 0; j < cols; ++j) {
+                    if (adjacency_matrices[index][i][j] != nn.get_weights()[index][i][j]) return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    float*** get_weights() const {
         return adjacency_matrices;
     }
-    float** get_biases() {
+    const float*** get_weights() {
+        return (const float***)(adjacency_matrices);
+    }
+    float** get_biases() const {
         return biases;
+    }
+    const float** get_biases() {
+        return (const float**)(biases);
     }
     NetworkParams get_params() {
         NetworkParams params(inputs, outputs, num_layers-2, hidden_layer_size);
