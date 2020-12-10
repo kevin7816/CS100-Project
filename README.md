@@ -30,12 +30,12 @@ that an algorithm can learn and adapt on its own using the evolutionary process
 ## Training
  * Each generation, Neural Network's compete and are evaluated against their peers. The Network's with the highest fitness scores are moved onto the next generation and are breeded with one another. 
 
- ![](Training.gif)
+ ![](Image/Training.gif)
  
 ## Playing
  * The user can choose to play on a preset difficulty against a previously trained neural network, or play against any of the networks in the *saves* folder.
  
-  ![](Playing.gif)
+  ![](Image/Playing.gif)
 
 # Design Patterns
  * **Composite**: The composite pattern is used to construct our game objects. We have an abstract class named *Object*, with three derived classes *Text*, *Ball*, and *Player*. These objects are all game objects that have inherited variables and functions from the base class *Object* such as positions.
