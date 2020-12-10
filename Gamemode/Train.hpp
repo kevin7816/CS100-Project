@@ -2,8 +2,6 @@
 #define __TRAIN_HPP__
 
 #include <iostream>
-#include "SDL2/SDL.h"
-#include "SDL2/SDL_ttf.h"
 #include "Gamemode.hpp"
 #include "../Pong/Object.hpp"
 #include "../Pong/Controller.hpp"
@@ -16,12 +14,9 @@
 #include "../NeuralNetwork/AI.hpp"
 #include "../NeuralNetwork/NetworkHandler.hpp"
 
-#include <ctime>
 #include <math.h>
 #include <iostream>
 #include <vector>
-
-#include "../definitions.hpp"
 
 using namespace std;
 

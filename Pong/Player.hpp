@@ -78,7 +78,7 @@ class Player : public Object {
         void show(SDL_Renderer* renderer){
             SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
             SDL_RenderFillRect(renderer, &rect);
-            SDL_RenderPresent(renderer);
+            // SDL_RenderPresent(renderer);
         }
         void randomize_color() {
             color.r = fRand(0,255);

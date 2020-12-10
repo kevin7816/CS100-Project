@@ -2,11 +2,12 @@
 
 //g++ Train.cpp -ISDL2-mingw32\include -L SDL2-mingw32\lib -w -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf -o compile/train
 
-#include "SDL2/SDL.h"
-#include "SDL2/SDL_ttf.h"
+#include "sdl2lib/include/SDL2/SDL.h"
+#include "sdl2lib/include/SDL2/SDL_ttf.h"
 
 #include "Gamemode/Gamemode.hpp"
 #include "Gamemode/Train.hpp"
+#include "Gamemode/Play.hpp"
 
 
 #include <stdio.h>
@@ -30,9 +31,9 @@ int main(int argc, char * argv[]) {
     if (input == '2') {
         game = new Train();
     }
-    // else if (input == '1') {
-    //     game = new Play();
-    // }
+    else if (input == '1') {
+        game = new Play();
+    }
     else {
         throw("unexpected entry");
     }
@@ -59,7 +60,7 @@ char intro() {
     cout << "authors: " << endl;
     SetColor(5);
     cout << "\tChristopher Vurbenova - Mouri" << endl << endl;
-    cout << "\tTran Ngyuen" << endl << endl;
+    cout << "\tTran Nguyen" << endl << endl;
     cout << "\tKevin Liang" << endl << endl;
     SetColor(7);
     cout << "-------------------------------------------------------------------------------------" << endl;
@@ -118,3 +119,8 @@ void SetColor(int ForgC) {
 // Light Magenta|   13
 // Yellow       |   14
 // White        |   15
+
+
+//g++ program.cpp -Isdl2lib\include -Lsdl2lib\lib -w -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf -o compile/program
+
+//g++ program.cpp -ISDL2-mingw32\include -L SDL2-mingw32\lib -w -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf -o compile/program
