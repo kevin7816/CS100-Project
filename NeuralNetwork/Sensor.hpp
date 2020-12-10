@@ -14,7 +14,8 @@ public:
     void set_activations(Player* player, float* activations, unsigned inputs) {
         switch (inputs) {
             case 3:
-                set_3_activations(player, activations);
+                //set_3_activations(player, activations);
+                op_3(player, activations);
                 break;
             case 4:
                 set_4_activations(player, activations);
@@ -37,6 +38,30 @@ private:
         //cout << activations[0] << endl;
         activations[1] = normalize(ball->getY(), 0, HEIGHT);
         activations[2] = normalize(player->getY(), 0, HEIGHT);
+    }
+
+    void op_3(Player* player, float* activations) {
+        float x_guess = ball->getX();
+        float y_guess = ball->getY();
+        float velY = ball->getVelY();
+        //cout << ball->getVelX() << ' ' << ball->getX() << endl;
+        if (ball->getVelX() > 0 && ball->getX() < player->getX()) {
+            while (x_guess < player->getX()) {
+                if (y_guess <= 0 || y_guess >= HEIGHT) {
+                    velY = -velY;
+                }
+                y_guess += velY;
+                x_guess += ball->getVelX();
+            }
+            activations[0] = normalize(ball->getX(), 32, WIDTH - 32);
+            activations[1] = normalize(y_guess, 0, HEIGHT);
+            activations[2] = normalize(player->getY(), 0, HEIGHT);
+        }
+        else {
+            activations[0] = 0;
+            activations[1] = 0;
+            activations[2] = normalize(player->getY(), 0, HEIGHT);
+        }
     }
 
     void set_4_activations(Player* player, float* activations) {

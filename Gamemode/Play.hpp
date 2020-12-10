@@ -2,19 +2,25 @@
 #define __PLAY_H__
 
 #include "Gamemode.hpp"
+#include "../Pong/Object.hpp"
+#include "../Pong/Controller.hpp"
 #include "../Pong/Player.hpp"
+#include "../Pong/User.hpp"
 #include "../Pong/Ball.hpp"
 #include "../Pong/Text.hpp"
-#include "../Pong/User.hpp"
+#include "../Pong/GameRenderer.hpp"
+#include "../NeuralNetwork/Sensor.hpp"
+#include "../NeuralNetwork/AI.hpp"
+#include "../NeuralNetwork/NetworkHandler.hpp"
 
 #include <cmath>
 
 class Play : public Gamemode {
     friend class PlayTests; // for unit testing purpose
     private:
-        Controller* left_controller = nullptr;
+        //Controller* left_controller = nullptr;
         Player* left_paddle = nullptr;
-        Controller* right_controller = nullptr;
+        //Controller* right_controller = nullptr;
         Player* right_paddle = nullptr;
         Ball* ball = nullptr;
         Text* score_l = nullptr;
@@ -30,18 +36,21 @@ class Play : public Gamemode {
                 throw "Could not init TTF\n";
             }
 
+            // set up ball
+            ball = new Ball();
+            ball->setSpeed(BALL_SPEED * 2);
+
             // set up left user player
-            left_controller = new User(SDL_SCANCODE_W, SDL_SCANCODE_S);
-            left_paddle = new Player(left_controller, 32, (HEIGHT/2)-(HEIGHT/8), (HEIGHT/4), 12);
+            Controller* left_controller = new User(SDL_SCANCODE_A, SDL_SCANCODE_D);
+            left_paddle = new Player(left_controller, 32, (HEIGHT/2)-(HEIGHT/8), (HEIGHT/HEIGHT_RATIO), 12);
             left_paddle->randomize_color();
 
             // set up right user player
-            right_controller = new User(SDL_SCANCODE_UP, SDL_SCANCODE_DOWN);
-            right_paddle = new Player(right_controller, WIDTH-32, (HEIGHT/2)-(HEIGHT/8), (HEIGHT/4), 12);
-            right_paddle->randomize_color();
+            //Controller* right_controller = new AI(new Sensor(ball), new NeuralNetwork("../saves/save_state_w1amn7x1h9/4_3_1_5_score4081_7g4ey57126"));
+            Controller* right_controller = new AI(new Sensor(ball), new NeuralNetwork("../saves/save_state_92eqfsd939/3_3_1_5_score6184_a17f88g27w"));
 
-            // set up ball
-            ball = new Ball();
+            right_paddle = new Player(right_controller, WIDTH-32,(HEIGHT/2)-(HEIGHT/8),(HEIGHT/HEIGHT_RATIO),12);
+            right_paddle->randomize_color();
 
             // set up static texts
             // Text* message = new Text("Press ESCAPE to exit", 50);
@@ -70,17 +79,21 @@ class Play : public Gamemode {
             TTF_Quit();
             SDL_Quit();
 
-            delete left_controller;
+            cout << "destructing" << endl;
+
+            //delete left_controller;
             delete left_paddle;
-            delete right_controller;
+            //delete right_controller;
             delete right_paddle;
             delete ball;
-            delete score_l;
-            delete score_r;
+            //delete score_l;
+            //delete score_r;
+
+            cout << "destructing" << endl;
         }
 
         // render all objects on screen and run the game
-        void update(bool &running) {
+        virtual void update(bool &running) {
             lastFrame = SDL_GetTicks();
             if(lastFrame >= (lastTime + 1000)) {
                 lastTime = lastFrame;

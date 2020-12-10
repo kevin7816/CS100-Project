@@ -2,8 +2,8 @@
 
 //g++ Train.cpp -ISDL2-mingw32\include -L SDL2-mingw32\lib -w -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf -o compile/train
 
-#include "sdl2lib/include/SDL2/SDL.h"
-#include "sdl2lib/include/SDL2/SDL_ttf.h"
+#include "SDL2/SDL.h"
+#include "SDL2/SDL_ttf.h"
 
 #include "Gamemode/Gamemode.hpp"
 #include "Gamemode/Train.hpp"
