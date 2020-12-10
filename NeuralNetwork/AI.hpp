@@ -75,7 +75,7 @@ public:
                 ++total;
             }
         }
-        
+
         return total;
     }
 

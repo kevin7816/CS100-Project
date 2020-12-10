@@ -20,6 +20,8 @@ using namespace std;
 
 void SetColor(int);
 
+string PlayInput();
+
 char intro();
 
 int main(int argc, char * argv[]) {
@@ -31,7 +33,7 @@ int main(int argc, char * argv[]) {
         game = new Train();
     }
     else if (input == '1') {
-        game = new Play();
+        game = new Play(PlayInput());
     }
     else {
         throw("unexpected entry");
@@ -48,6 +50,36 @@ int main(int argc, char * argv[]) {
     SetColor(7);
     system("PAUSE");
     return 0;
+}
+
+string PlayInput() {
+    system("CLS");
+    SetColor(15);
+    cout << endl;
+    cout << "Welcome to User vs. Player" << endl;
+    cout << endl;
+    SetColor(10); //green
+    cout << "Difficulties:" << endl;
+    cout << "-----------------------------------------------------------------------" << endl;
+    cout << "\t1. Easy" << endl;
+    cout << "\t2. Medium" << endl;
+    cout << "\t3. Hard" << endl;
+    cout << "\t4. Insane" << endl;
+    SetColor(12); //red
+    cout << "\t5. Literally Don't Even Try" << endl;
+    cout << "\t6. Don't Even Try Except It's Even Harder" << endl;
+    SetColor(10); //green
+    cout << "-----------------------------------------------------------------------" << endl;
+    cout << endl;
+    SetColor(7); //default color
+    cout << "Please select a difficulty, or if you want to play against a specific AI (1-5)," << endl;
+    cout << "or input a file directory that is in the \'saves\' folder (example:" << endl;
+    cout << "save_state_92eqfsd939/3_3_1_5_score6184_a17f88g27w):" << endl;
+
+    string input;
+    cin >> input;
+    cout << endl;
+    return input;
 }
 
 char intro() {

@@ -12,8 +12,12 @@
 #include "../NeuralNetwork/Sensor.hpp"
 #include "../NeuralNetwork/AI.hpp"
 #include "../NeuralNetwork/NetworkHandler.hpp"
+#include "../definitions.hpp"
 
+#include <string>
 #include <cmath>
+#include <windows.h>
+#include <io.h>
 
 class Play : public Gamemode {
     friend class PlayTests; // for unit testing purpose
@@ -30,7 +34,7 @@ class Play : public Gamemode {
         bool turn = 0; // turn is 1 or 0 == player 1'turn or player 2's turn
 
     public:
-        Play() : Gamemode() {
+        Play(string input) : Gamemode() {
             if (TTF_Init() < 0) {
                 fprintf(stderr, "Could not init TTF\n", SDL_GetError());
                 throw "Could not init TTF\n";
@@ -40,17 +44,53 @@ class Play : public Gamemode {
             ball = new Ball();
             ball->setSpeed(BALL_SPEED * 2);
 
+            Controller* right_controller;
+
+            if (input == "1") {
+                SPEED = 12.5;
+                ball->setSpeed(9 * 2);
+                right_controller = new AI(new Sensor(ball), new NeuralNetwork("../saves/save_state_ral896q24j/4_3_1_5_score13_kirq024328"));
+            }
+            else if (input == "2") {
+                SPEED = 12.5;
+                ball->setSpeed(9 * 2);
+                right_controller = new AI(new Sensor(ball), new NeuralNetwork("../saves/save_state_w1amn7x1h9/4_3_1_5_score58_6lup69i97x"));
+            }
+            else if (input == "3") {
+                SPEED = 15.0;
+                ball->setSpeed(9 * 2);
+                right_controller = new AI(new Sensor(ball), new NeuralNetwork("../saves/save_state_fenqh117a3/4_3_1_5_score1598_9ns5o6310d"));
+            }
+            else if (input == "4") {
+                SPEED = 12.5;
+                ball->setSpeed(14 * 2);
+                right_controller = new AI(new Sensor(ball), new NeuralNetwork("../saves/save_state_92eqfsd939/3_3_1_5_score6184_a17f88g27w"));
+            }
+            else if (input == "5") {
+                SPEED = 12.5;
+                ball->setSpeed(14 * 2);
+                right_controller = new AI(new Sensor(ball), new NeuralNetwork("../saves/save_state_4o5hoxxzm1/3_3_1_5_score748_xt75k0v150"));
+            }
+            else if (input == "6") {
+                SPEED = 9.0;
+                ball->setSpeed(14 * 2);
+                right_controller = new AI(new Sensor(ball), new NeuralNetwork("../saves/save_state_4o5hoxxzm1/3_3_1_5_score748_xt75k0v150"));
+            }
+            else {
+                string filename = "../saves/";
+                filename += input;
+                right_controller = new AI(new Sensor(ball), new NeuralNetwork(input));
+            }
+
+            // set up right user player
+            //Controller* right_controller = new AI(new Sensor(ball), new NeuralNetwork("../saves/save_state_w1amn7x1h9/4_3_1_5_score4081_7g4ey57126"));
+            right_paddle = new Player(right_controller, WIDTH-32,(HEIGHT/2)-(HEIGHT/8),(HEIGHT/HEIGHT_RATIO),12);
+            right_paddle->randomize_color();
+
             // set up left user player
             Controller* left_controller = new User(SDL_SCANCODE_A, SDL_SCANCODE_D);
             left_paddle = new Player(left_controller, 32, (HEIGHT/2)-(HEIGHT/8), (HEIGHT/HEIGHT_RATIO), 12);
             left_paddle->randomize_color();
-
-            // set up right user player
-            //Controller* right_controller = new AI(new Sensor(ball), new NeuralNetwork("../saves/save_state_w1amn7x1h9/4_3_1_5_score4081_7g4ey57126"));
-            Controller* right_controller = new AI(new Sensor(ball), new NeuralNetwork("../saves/save_state_92eqfsd939/3_3_1_5_score6184_a17f88g27w"));
-
-            right_paddle = new Player(right_controller, WIDTH-32,(HEIGHT/2)-(HEIGHT/8),(HEIGHT/HEIGHT_RATIO),12);
-            right_paddle->randomize_color();
 
             // set up static texts
             // Text* message = new Text("Press ESCAPE to exit", 50);
@@ -201,6 +241,19 @@ class Play : public Gamemode {
                 if(keystates[SDL_SCANCODE_ESCAPE]) running = false;
             }
 
+            return;
+        }
+
+        void SetColor(int ForgC) {
+            WORD wColor;
+
+            HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
+            CONSOLE_SCREEN_BUFFER_INFO csbi;
+
+            if(GetConsoleScreenBufferInfo(hStdOut, &csbi)) {
+                wColor = (csbi.wAttributes & 0xF0) + (ForgC & 0x0F);
+                SetConsoleTextAttribute(hStdOut, wColor);
+            }
             return;
         }
 };
