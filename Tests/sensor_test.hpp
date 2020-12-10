@@ -25,14 +25,12 @@ class SensorTests : public Tests {
             return;
         }
 
-        void set_activations_test() { 
+        void set_activations_test() {
             Player* player = new Player(new User(SDL_SCANCODE_W, SDL_SCANCODE_S), 0, 0, 10, 10);
 
             float act3[3] = {-1, -1, -1};
             int inputs = 3;
-            std::cout << "hi" << std::endl;
             sensor->set_activations(player, act3, inputs);
-            std::cout << "hi2" << std::endl;
 
             if (act3[0] == -1 || act3[1] == -1 || act3[2] == -1) {
                 failed++;

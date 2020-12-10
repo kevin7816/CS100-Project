@@ -5,7 +5,11 @@
 #include "SDL2/SDL_ttf.h"
 
 //------------------------------------------------------------------------------------------------------
+// 32 bit compile command:
+//g++ program.cpp -ISDL2-mingw32\include -L SDL2-mingw32\lib -w -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf -o compile/program
 
+// 64 bit compile command:
+//g++ program.cpp -Isdl2lib\include -Lsdl2lib\lib -w -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf -o compile/program
 
 //
 // CONTROL OPTIONS
@@ -13,8 +17,8 @@
 // controls begin with: "SDL_SCANCODE_" and end with the desired letter
 // arrow keys: SDL_SCANCODE_UP, SDL_SCANCODE_DOWN, SDL_SCANCODE_LEFT, SDL_SCANCODE_RIGHT
 //
-unsigned PLAYER_UP = SDL_SCANCODE_W;
-unsigned PLAYER_DOWN = SDL_SCANCODE_S;
+unsigned PLAYER_UP = SDL_SCANCODE_A;
+unsigned PLAYER_DOWN = SDL_SCANCODE_D;
 //
 
 
