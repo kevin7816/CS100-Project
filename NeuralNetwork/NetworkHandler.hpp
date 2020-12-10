@@ -22,6 +22,7 @@ bool has(vector<unsigned> v, unsigned item);
 float fRand(float fMin, float fMax);
 
 class NetworkHandler {
+friend class NHTests;
 private:
     NetworkParams network_params;
     float mutation_rate;

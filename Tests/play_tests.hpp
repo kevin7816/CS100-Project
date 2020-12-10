@@ -26,8 +26,7 @@ class PlayTests : public Tests {
         }
 
         void constructor_test(SDL_Renderer* renderer) { 
-            if (play.left_controller == nullptr || play.left_paddle == nullptr ||
-                play.right_controller == nullptr || play.right_paddle == nullptr ||
+            if (play.left_paddle == nullptr || play.right_paddle == nullptr ||
                 play.ball == nullptr) {
                 failed++;
                 cout << "[FAILED] Setup_Test: Failed to set up game objects\n"
