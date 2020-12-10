@@ -55,7 +55,12 @@ public:
         players = new Player*[generation_size];
         for (unsigned i = 0; i < generation_size; ++i) {
             balls[i] = new Ball();
-            players[i] = new Player(new AI(new Sensor(balls[i]), network_params), 32,(HEIGHT/2)-(HEIGHT/8),(HEIGHT/HEIGHT_RATIO),12);
+            // if (i <= 10) {
+            //     players[i] = new Player(new AI(new Sensor(balls[i]), new NeuralNetwork("../saves/save_state_w1amn7x1h9/4_3_1_5_score4081_7g4ey57126")),32,(HEIGHT/2)-(HEIGHT/8),(HEIGHT/HEIGHT_RATIO),12);
+            // }
+            // else {
+                players[i] = new Player(new AI(new Sensor(balls[i]), network_params), 32,(HEIGHT/2)-(HEIGHT/8),(HEIGHT/HEIGHT_RATIO),12);
+            //}
             players[i]->randomize_color();
             balls[i]->set_color(players[i]->get_color());
         }
@@ -283,6 +288,9 @@ private:
             balls[i] = new Ball();
             if (i < best_networks.size()) {
                 players[i] = new Player(new AI(new Sensor(balls[i]), new NeuralNetwork(best_networks.at(i).first, network_params)), 32,(HEIGHT/2)-(HEIGHT/8),(HEIGHT/HEIGHT_RATIO),12);
+                //
+                //players[i] = new Player(new AI(new Sensor(balls[i]), new NeuralNetwork("../saves/save_state_w1amn7x1h9/4_3_1_5_score4081_7g4ey57126")),32,(HEIGHT/2)-(HEIGHT/8),(HEIGHT/HEIGHT_RATIO),12);
+                //
             }
             else if (i % 3 == 0) {
                 unsigned mutation_index = fRand(0, best_networks.size()-0.1);

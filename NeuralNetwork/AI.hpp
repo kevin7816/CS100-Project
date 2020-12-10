@@ -7,6 +7,9 @@
 #include "Sensor.hpp"
 #include "../definitions.hpp"
 
+#include <string>
+
+using namespace std;
 
 class AI: public Controller {
 private:
@@ -41,6 +44,14 @@ public:
         //cout << "made network" << endl;
         movement = new bool[params.inputs];
         for (unsigned i = 0; i < params.inputs; ++i) {
+            movement[i] = false;
+        }
+    }
+
+    AI(Sensor* sensor, string directory): sensor(sensor) {
+        nn = new NeuralNetwork(directory);
+        movement = new bool[nn->num_inputs()];
+        for (unsigned i = 0; i < nn->num_inputs(); ++i) {
             movement[i] = false;
         }
     }

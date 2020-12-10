@@ -16,20 +16,20 @@ class Text : public Object {
     private:
         const char* words = "";
         double size = 100;
-        const char* font = "compile/pixel.ttf"; // or compile/pixel.ttf if run directly from terminal
+        const char* font = "../compile/pixel.ttf"; // or compile/pixel.ttf if run directly from terminal
         SDL_Rect text_rect {0, 0, 100, 100}; // default pos == (0,0) and (w,h) == (100,100)
         SDL_Color color = {255, 255, 255, 255}; // default white
         TTF_Font* text_font = nullptr;
         SDL_Surface* text_surface = nullptr;
         SDL_Texture* text_texture = nullptr;
-       
+
 
     public:
         // constructors
         Text(const char* words) : words(words) {};
 
         Text(const char* words, double size) : words(words), size(size) {};
-            
+
         Text(const char* words, double size, SDL_Color color) : words(words), size(size), color(color) {};
 
         Text(const char* words, double size, pair<int,int> pos) : words(words), size(size) { // for score
@@ -50,7 +50,7 @@ class Text : public Object {
         void create(SDL_Renderer* renderer) {
             // open font
             text_font = TTF_OpenFontIndex(font, size, 0); // change last argument if font has different font faces
-            if (text_font == nullptr) { 
+            if (text_font == nullptr) {
                 throw "Could not open font";
                 return;
             }
@@ -88,19 +88,19 @@ class Text : public Object {
         void set_text_color(int r, int g, int b) {
             if (r > -1 && g > -1 && b > -1 && r < 256 && g < 256 && b < 256) {
                 color = {(uint8_t)r, (uint8_t)g, (uint8_t)b, 255}; // default opacity = 255 = full
-            }    
-            else 
+            }
+            else
                 throw "Invalid rbg values";
             return;
         }
         void set_text_size(double size) {
             if (size > 0)
                 this->size = size;
-            else 
+            else
                 throw "Invalid size";
             return;
         }
-        void set_text_pos(int pos_x, int pos_y) { 
+        void set_text_pos(int pos_x, int pos_y) {
             if (pos_x > -1 && pos_y > -1) {
                 text_rect.x = pos_x;
                 text_rect.y = pos_y;
@@ -118,7 +118,7 @@ class Text : public Object {
         int get_color_b() { return color.b; }
         int get_color_g() { return color.g; }
         int get_color_a() { return color.a; }
-    
+
     // private functions
     private:
         // set width, height and position of text_rect according to length and size of text and window

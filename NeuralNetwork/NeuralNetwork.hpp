@@ -176,25 +176,6 @@ public:
         num_layers += 2;
         fin >> hidden_layer_size;
 
-        //initializing the weights in the adjacency matrices
-        adjacency_matrices = new float**[num_layers]; //all layers have a adjacency matrix except for input layer
-        for (unsigned index = 0; index < num_layers-1; ++index) {
-            if (index == 0) { //first adjacency_matrix is under the second layer
-                adjacency_matrices[index] = new float*[hidden_layer_size];
-                init_layer(index, hidden_layer_size, inputs);
-            }
-
-            else if (index == num_layers-2) { //last adjacency matrix on the output layer
-                adjacency_matrices[index] = new float*[outputs];
-                init_layer(index, outputs, hidden_layer_size);
-            }
-
-            else { // hidden layers connected to hidden layers
-                adjacency_matrices[index] = new float*[hidden_layer_size];
-                init_layer(index, hidden_layer_size, hidden_layer_size);
-            }
-        }
-
         //initializing the biases and activations
         biases = new float*[num_layers];
         activations = new float*[num_layers];
@@ -202,17 +183,61 @@ public:
             if (i == 0) { //input layer
                 biases[i] = new float[inputs];
                 activations[i] = new float[inputs];
-                init_nodes(i, inputs);
+                for (unsigned j = 0; j < inputs; ++j) {
+                    fin >> biases[i][j];
+                }
             }
             else if (i == num_layers - 1) { //output layer
                 biases[i] = new float[outputs];
                 activations[i] = new float[outputs];
                 init_nodes(i, outputs);
+                for (unsigned j = 0; j < outputs; ++j) {
+                    fin >> biases[i][j];
+                }
             }
             else { //hidden_layers
                 biases[i] = new float[hidden_layer_size];
                 activations[i] = new float[hidden_layer_size];
-                init_nodes(i, hidden_layer_size);
+                for (unsigned j = 0; j < hidden_layer_size; ++j) {
+                    fin >> biases[i][j];
+                }
+            }
+        }
+
+        //initializing the weights in the adjacency matrices
+        adjacency_matrices = new float**[num_layers]; //all layers have a adjacency matrix except for input layer
+        for (unsigned index = 0; index < num_layers-1; ++index) {
+            if (index == 0) { //first adjacency_matrix is under the second layer
+                adjacency_matrices[index] = new float*[hidden_layer_size];
+                //init_layer(index, hidden_layer_size, inputs);
+                for (unsigned i = 0; i < hidden_layer_size; ++i) {
+                    adjacency_matrices[index][i] = new float[inputs];
+                    for (unsigned j = 0; j < inputs; ++j) {
+                        fin >> adjacency_matrices[index][i][j];
+                    }
+                }
+            }
+
+            else if (index == num_layers-2) { //last adjacency matrix on the output layer
+                adjacency_matrices[index] = new float*[outputs];
+                //init_layer(index, outputs, hidden_layer_size);
+                for (unsigned i = 0; i < outputs; ++i) {
+                    adjacency_matrices[index][i] = new float[hidden_layer_size];
+                    for (unsigned j = 0; j < hidden_layer_size; ++j) {
+                        fin >> adjacency_matrices[index][i][j];
+                    }
+                }
+            }
+
+            else { // hidden layers connected to hidden layers
+                adjacency_matrices[index] = new float*[hidden_layer_size];
+                //init_layer(index, hidden_layer_size, hidden_layer_size);
+                for (unsigned i = 0; i < hidden_layer_size; ++i) {
+                    adjacency_matrices[index][i] = new float[hidden_layer_size];
+                    for (unsigned j = 0; j < hidden_layer_size; ++j) {
+                        fin >> adjacency_matrices[index][i][j];
+                    }
+                }
             }
         }
     }

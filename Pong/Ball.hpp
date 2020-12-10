@@ -8,13 +8,14 @@
 
 class Ball : public Object {
     private:
-        double speed=BALL_SPEED;
+        double speed;//=BALL_SPEED;
         double velX=0;
         double velY=0;
         SDL_Rect rect;
         SDL_Color color;
     public:
         Ball() {
+            speed = BALL_SPEED;
             rect.x=0;
             rect.y=0;
             rect.h=16;
@@ -25,6 +26,7 @@ class Ball : public Object {
             color.a = 255;
         }
         Ball(double x, double y) {
+            speed = BALL_SPEED;
             rect.x=x;
             rect.y=y;
             rect.h=16;
