@@ -16,7 +16,7 @@ int main(int argc, char * argv[]) {
     Tests* test;
     int tot_passed = 0;
     int tot_failed = 0;
-    
+
     SetColor(14);
     cout << "Performing Ball Class Tests . . ." << endl << endl;
     SetColor(7);
@@ -132,6 +132,8 @@ int main(int argc, char * argv[]) {
     SetColor(4);
     cout << "TOTAL FAILED: " << tot_failed << endl;
     SetColor(7);
+
+    system("PAUSE");
 
     return 0;
 }
