@@ -4,6 +4,8 @@
  \<[Christopher Vurbenova-Mouri](https://github.com/Quidifer)\>
  \<[Hongting(Kevin) Liang](https://github.com/kevin7816)\>
  \<[Tran Nguyen](https://github.com/trannguyen28)\>
+ 
+ ![](Training.gif)
 
 ## Why is it important or interesting to you?
  This project is interesting because it explores the realm of AI. We find it interesting

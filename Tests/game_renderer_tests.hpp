@@ -33,10 +33,13 @@ class GRTests : public Tests{
             remove_test_fail(o1, "Remove_Duplicate"); // remove o1 again
             remove_test_fail(o2, "Remove_Duplicate"); // remove o2 again
 
-            std::cout << "-------------------\n"
-                    << "Passed " << passed << " tests\n"
-                    << "Failed " << failed << " tests\n"
-                    << "-------------------\n";
+            std::cout << "-------------------\n";
+            SetColor(2);
+            std::cout << "Passed " << passed << " tests\n";
+            SetColor(4);
+            std::cout << "Failed " << failed << " tests\n";
+            SetColor(7);
+            std::cout << "-------------------\n";
 
             if(!o1) delete o1;
             if(!o2) delete o2;

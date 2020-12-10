@@ -33,12 +33,15 @@ class AITests : public Tests {
             delete ai;
 
             get_network_test();
-            get_fitness_test();
+            // get_fitness_test();
 
-            cout << "-------------------\n"
-                << "Passed " << passed << " tests\n"
-                << "Failed " << failed << " tests\n"
-                << "-------------------\n";
+            cout << "-------------------\n";
+            SetColor(2);
+            cout << "Passed " << passed << " tests\n";
+            SetColor(4);
+            cout << "Failed " << failed << " tests\n";
+            SetColor(7);
+            cout << "-------------------\n";
 
             delete sensor;
             delete nn;
@@ -92,22 +95,22 @@ class AITests : public Tests {
             cout << endl;
         }
 
-        void get_fitness_test() {
-            int fitness = -1;
+        // void get_fitness_test() {
+        //     int fitness = -1;
 
-            fitness = ai->get_fitness();
+        //     fitness = ai->get_fitness();
 
-            if (fitness == -1) {
-                failed++;
-                cout << "[FAILED] Get_Fitness: Failed to get fitness\n"
-                     << "       Expected: fitness is not -1\n"
-                     << "       Actual: fitness is " << fitness << endl;
-            } else {
-                passed++;
-                cout << "[PASSED] Get_Network: Successfully got fitness" << endl;
-            }
-            cout << endl;
-        }
+        //     if (fitness == -1) {
+        //         failed++;
+        //         cout << "[FAILED] Get_Fitness: Failed to get fitness\n"
+        //              << "       Expected: fitness is not -1\n"
+        //              << "       Actual: fitness is " << fitness << endl;
+        //     } else {
+        //         passed++;
+        //         cout << "[PASSED] Get_Network: Successfully got fitness" << endl;
+        //     }
+        //     cout << endl;
+        // }
 
 };
 

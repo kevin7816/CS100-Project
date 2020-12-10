@@ -15,10 +15,13 @@ class SensorTests : public Tests {
         virtual void run_tests() {
             set_activations_test();
 
-            std::cout << "-------------------\n"
-                << "Passed " << passed << " tests\n"
-                << "Failed " << failed << " tests\n"
-                << "-------------------\n";
+            std::cout << "-------------------\n";
+            SetColor(2);
+            std::cout << "Passed " << passed << " tests\n";
+            SetColor(4);
+            std::cout << "Failed " << failed << " tests\n";
+            SetColor(7);
+            std::cout << "-------------------\n";
 
             delete sensor;
 
