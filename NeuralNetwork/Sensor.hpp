@@ -54,9 +54,9 @@ private:
                 y_guess += velY;
                 x_guess += ball->getVelX();
             }
-            cout << activations[0] << endl;
+            // cout << activations[0] << endl;
             activations[0] = normalize(ball->getX(), 32, WIDTH - 32);
-            cout << activations[0] << endl;
+            // cout << activations[0] << endl;
             activations[1] = normalize(y_guess, 0, HEIGHT);
             activations[2] = normalize(player->getY(), 0, HEIGHT);
         }

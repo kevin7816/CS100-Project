@@ -15,10 +15,13 @@ class SensorTests : public Tests {
         virtual void run_tests() {
             set_activations_test();
 
-            std::cout << "-------------------\n"
-                << "Passed " << passed << " tests\n"
-                << "Failed " << failed << " tests\n"
-                << "-------------------\n";
+            std::cout << "-------------------\n";
+            SetColor(2);
+            std::cout << "Passed " << passed << " tests\n";
+            SetColor(4);
+            std::cout << "Failed " << failed << " tests\n";
+            SetColor(7);
+            std::cout << "-------------------\n";
 
             delete sensor;
 
@@ -30,9 +33,7 @@ class SensorTests : public Tests {
 
             float act3[3] = {-1, -1, -1};
             int inputs = 3;
-            std::cout << "hi" << std::endl;
             sensor->set_activations(player, act3, inputs);
-            std::cout << "hi2" << std::endl;
 
             if (act3[0] == -1 || act3[1] == -1 || act3[2] == -1) {
                 failed++;

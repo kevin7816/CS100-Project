@@ -13,14 +13,15 @@ int main(int argc, char * argv[]) {
     Tests* test;
     int tot_passed = 0;
     int tot_failed = 0;
+    SetColor(7);
 
-    // cout << "Performing Play Class Tests . . ." << endl << endl;
-    // test = new PlayTests();
-    // test->run_tests();
-    // tot_passed += test->passed;
-    // tot_failed += test->failed;
-    // delete test;
-    // cout << endl << "======================================================================================" << endl << endl;
+    cout << "Performing Play Class Tests . . ." << endl << endl;
+    test = new PlayTests();
+    test->run_tests();
+    tot_passed += test->passed;
+    tot_failed += test->failed;
+    delete test;
+    cout << endl << "======================================================================================" << endl << endl;
 
     cout << "Performing Train Class Tests . . ." << endl << endl;
     test = new TrainTests();
@@ -78,10 +79,15 @@ int main(int argc, char * argv[]) {
     delete test;
     cout << endl << "======================================================================================" << endl << endl;
 
-    cout << "Total passed: " << tot_passed << endl;
-    cout << "Total failed: " << tot_failed << endl;
+    SetColor(2);
+    cout << "TOTAL PASSED: " << tot_passed << endl;
+    SetColor(4);
+    cout << "TOTAL FAILED: " << tot_failed << endl;
+    SetColor(7);
 
     return 0;
 }
 
 //g++ all_tests.cpp -Isdl2lib\include -Lsdl2lib\lib -w -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf -o compile/test
+
+//g++ all_tests.cpp -ISDL2-mingw32\include -L SDL2-mingw32\lib -w -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf -o compile/test

@@ -7,27 +7,30 @@
 
 class PlayTests : public Tests {
     private: 
-        Play play;
+        Play* play = new Play("1");
     public:
         // ~PlayTests() { }
         virtual void run_tests() {
-            SDL_Renderer* renderer;
-
-            constructor_test(renderer);
+            constructor_test();
             serve_test(0);
             serve_test(1);
 
-            cout << "-------------------\n"
-                << "Passed " << passed << " tests\n"
-                << "Failed " << failed << " tests\n"
-                << "-------------------\n";
+            std::cout << "-------------------\n";
+            SetColor(2);
+            std::cout << "Passed " << passed << " tests\n";
+            SetColor(4);
+            std::cout << "Failed " << failed << " tests\n";
+            SetColor(7);
+            std::cout << "-------------------\n";
+
+            delete play;
 
             return;
         }
 
-        void constructor_test(SDL_Renderer* renderer) { 
-            if (play.left_paddle == nullptr || play.right_paddle == nullptr ||
-                play.ball == nullptr) {
+        void constructor_test() { 
+            if (play->left_paddle == nullptr || play->right_paddle == nullptr ||
+                play->ball == nullptr) {
                 failed++;
                 cout << "[FAILED] Setup_Test: Failed to set up game objects\n"
                      << "       Expected: paddles are created and assigned to controllers; ball is created\n"
@@ -42,9 +45,9 @@ class PlayTests : public Tests {
 
         void serve_test(const bool &turn) {
             bool cpy = turn;
-            play.serve(cpy);
+            play->serve(cpy);
             if (cpy == 1) { // turn is switched after calling serve()
-                if (play.ball->getVelX() != play.ball->getSpeed()/-2) {
+                if (play->ball->getVelX() != play->ball->getSpeed()/-2) {
                     failed++;
                     cout << "[FAILED] Serve_Test: Failed to set the server\n"
                          << "       Expected: Right paddle's turn to serve\n"
@@ -55,7 +58,7 @@ class PlayTests : public Tests {
                 }
             }
             else if (cpy == 0) {
-                if (play.ball->getVelX() != play.ball->getSpeed()/2) {
+                if (play->ball->getVelX() != play->ball->getSpeed()/2) {
                     failed++;
                     cout << "[FAILED] Serve_Test: Failed to set the server\n"
                          << "       Expected: Left paddle's turn to serve\n"
