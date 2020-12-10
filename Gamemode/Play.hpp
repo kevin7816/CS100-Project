@@ -88,7 +88,7 @@ class Play : public Gamemode {
             right_paddle->randomize_color();
 
             // set up left user player
-            Controller* left_controller = new User(SDL_SCANCODE_A, SDL_SCANCODE_D);
+            Controller* left_controller = new User(PLAYER_UP, PLAYER_DOWN);
             left_paddle = new Player(left_controller, 32, (HEIGHT/2)-(HEIGHT/8), (HEIGHT/HEIGHT_RATIO), 12);
             left_paddle->randomize_color();
 
