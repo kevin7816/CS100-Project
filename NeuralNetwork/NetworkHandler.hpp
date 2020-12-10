@@ -12,6 +12,7 @@
 #include <math.h>
 #include <utility>      // std::pair, std::make_pair
 #include <string>
+#include <fstream>
 
 using namespace std;
 
