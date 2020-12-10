@@ -48,16 +48,14 @@ that an algorithm can learn and adapt on its own using the evolutionary process
  
 # Class Diagram
 ![OMT Diagram](https://github.com/cs100/final-project-cvurb001-hlian050-tnguy918/blob/master/AI%20Learns%20to%20Play%20Pong.png)
-* The abstract class *Object* has three derived classes *Text*, *Ball*, and *Player*. These objects are all game objects that have inherited variables and functions from the base class *Object* as well as their own member variables and functions (some are from the SDL Library that we will use for our graphics.)
+* The abstract class *Object* is a **Composite Pattern** that has three derived classes *Text*, *Ball*, and *Player*. These objects are all game objects that have inherited variables and functions from the base class *Object* as well as their own member variables and functions (some are from the SDL Library that we will use for our graphics.)
 
- * The compositor *Controller* declares a common interface for the two derived strategies: *User* and *NeuralNetwork*.
+ * The compositor *Controller* of the **Strategy Pattern** declares a common interface for the two derived strategies: *User* and *NeuralNetwork*.
    * In the class *User*, we will implement an algorithm to allow the user to play the game themselves.
    * In the class *NeuralNetwork*, we will construct multiple layers of the neural network. These layers will work together to perform the arithmetic operations behind forward propagation.
+   
+ * *GameRenderer* will be passed all game objects and will render them onto the screen.
 
- * The observer *Observer* would observe the user's action which causes objects in the *OptionMenu* to change their states and then notify the concrete observers *DifferentOptions* about the changes. Then, *Train* would take the changes notified to *DifferentOptions* and adjust the neural network's arithmetic operations on how to train the AI based on the user's choices.
+ * *NetworkHandler* is the **Factory Pattern** handles the evolutionary process behind Neuroevolution using a vector holding all *NeuralNetwork* objects.
 
- * *GameRender* will be passed all game objects and will render them onto the screen.
-
- * *NetworkHandler* handles the evolutionary process behind Neuroevolution using a vector holding all *NeuralNetwork* objects.
-
- * The class *GameMode* is where the Client can interact with the program. It uses a GameRenderer to render all objects and run the game. The user can them choose either of the two game modes: *Play* to play the game themselves or *Train* to customize training options using *OptionMenu* and train their AI to play the game for them.
+ * The class *GameMode* is another **Composite Pattern** where the Client can interact with the program. It uses a GameRenderer to render all objects and run the game. The user can them choose either of the two game modes: *Play* to play the game themselves or *Train* to customize training options using *OptionMenu* and train their AI to play the game for them.
