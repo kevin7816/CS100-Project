@@ -26,6 +26,7 @@
 using namespace std;
 
 class Train: public Gamemode {
+friend class TrainTests;
 private:
     NetworkHandler * handler;
     Player* left_wall;

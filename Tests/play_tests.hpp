@@ -1,16 +1,31 @@
+#ifndef __PLAYTESTS_H__
+#define __PLAYTESTS_H__
+
 #include <iostream>
+#include "tests.hpp"
 #include "../GameMode/Play.hpp"
 
-class PlayTests {
+class PlayTests : public Tests {
     private: 
         Play play;
     public:
-        int failed = 0;
-        int passed = 0;
+        // ~PlayTests() { }
+        virtual void run_tests() {
+            SDL_Renderer* renderer;
 
-        void setup_test(SDL_Renderer* renderer) { 
-            play.setup(renderer);
+            constructor_test(renderer);
+            serve_test(0);
+            serve_test(1);
 
+            cout << "-------------------\n"
+                << "Passed " << passed << " tests\n"
+                << "Failed " << failed << " tests\n"
+                << "-------------------\n";
+
+            return;
+        }
+
+        void constructor_test(SDL_Renderer* renderer) { 
             if (play.left_controller == nullptr || play.left_paddle == nullptr ||
                 play.right_controller == nullptr || play.right_paddle == nullptr ||
                 play.ball == nullptr) {
@@ -67,21 +82,7 @@ class PlayTests {
 
 };
 
-int main(int argc, char * argv[]) {
-    PlayTests test;
-    SDL_Renderer* renderer;
-
-    test.setup_test(renderer);
-    test.serve_test(0);
-    test.serve_test(1);
-
-    cout << "-------------------\n"
-         << "Passed " << test.passed << " tests\n"
-         << "Failed " << test.failed << " tests\n"
-         << "-------------------\n";
-
-    return 0;
-}
+#endif
 
 
-//g++ play_tests.cpp -Isdl2lib\include -Lsdl2lib\lib -w -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf -o play_test
+//g++ play_tests.cpp -Isdl2lib\include -Lsdl2lib\lib -w -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf -o compile/play_test

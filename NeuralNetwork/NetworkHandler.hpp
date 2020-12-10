@@ -262,11 +262,11 @@ private:
     void clear() {
         for (unsigned i = 0; i < generation_size; ++i) {
             if (balls[i]) {
-                cout << "asdjfklasfasdf" << endl;
+                // cout << "asdjfklasfasdf" << endl;
                 delete balls[i];
             }
             if (players[i]) {
-                cout << "asdnfjasjdfkl" << endl;
+                // cout << "asdnfjasjdfkl" << endl;
                 delete players[i];
             }
         }

@@ -1,14 +1,49 @@
+#ifndef __GAMERENDERERTESTS_H__
+#define __GAMERENDERERTESTS_H__
+
 #include <iostream>
 #include "../Pong/GameRenderer.hpp"
 #include "../Pong/Ball.hpp"
+#include "tests.hpp"
 
-class GRTests {
+class GRTests : public Tests{
     private: 
         GameRenderer gr;
         std::string err_msg = "";
     public:
-        int failed = 0;
-        int passed = 0;
+        // ~GRTests() {}
+        virtual void run_tests() {
+            Object* o1 = new Ball();
+            Object* o2 = new Ball();
+            Object* o3 = new Ball();
+
+            std::vector<Object*> objects;
+            objects.push_back(o2);
+            objects.push_back(o3);
+
+            add_test(o1, "Add_Basic"); // add o1
+            add_test(objects, "Add_Multiple"); // add o2, o3
+            add_test_fail(o1, "Add_Duplicate"); // add o1 again
+            add_test_fail(o2, "Add_Duplicate"); // add o1 again
+            add_test_fail(o3, "Add_Duplicate"); // add o1 again
+            remove_test(o3, "Remove_Basic"); // remove o3
+            remove_test_fail(o3, "Remove_Duplicate"); // remove o3 again
+            remove_test(o1, "Remove_Basic"); // remove o1
+            remove_test(o2, "Remove_Basic"); // remove o2
+            remove_test_fail(o1, "Remove_Duplicate"); // remove o1 again
+            remove_test_fail(o2, "Remove_Duplicate"); // remove o2 again
+
+            std::cout << "-------------------\n"
+                    << "Passed " << passed << " tests\n"
+                    << "Failed " << failed << " tests\n"
+                    << "-------------------\n";
+
+            if(!o1) delete o1;
+            if(!o2) delete o2;
+            if(!o3) delete o3;
+
+            return;
+        }
 
         void add_test(std::vector<Object*> objects, std::string name) { 
             int orig_size = gr.gameObjects.size();
@@ -129,39 +164,6 @@ class GRTests {
 
 };
 
-int main(int argc, char * argv[]) {
-    GRTests test;
-    Object* o1 = new Ball();
-    Object* o2 = new Ball();
-    Object* o3 = new Ball();
-
-    std::vector<Object*> objects;
-    objects.push_back(o2);
-    objects.push_back(o3);
-
-    test.add_test(o1, "Add_Basic"); // add o1
-    test.add_test(objects, "Add_Multiple"); // add o2, o3
-    test.add_test_fail(o1, "Add_Duplicate"); // add o1 again
-    test.add_test_fail(o2, "Add_Duplicate"); // add o1 again
-    test.add_test_fail(o3, "Add_Duplicate"); // add o1 again
-    test.remove_test(o3, "Remove_Basic"); // remove o3
-    test.remove_test_fail(o3, "Remove_Duplicate"); // remove o3 again
-    test.remove_test(o1, "Remove_Basic"); // remove o1
-    test.remove_test(o2, "Remove_Basic"); // remove o2
-    test.remove_test_fail(o1, "Remove_Duplicate"); // remove o1 again
-    test.remove_test_fail(o2, "Remove_Duplicate"); // remove o2 again
-
-    std::cout << "-------------------\n"
-              << "Passed " << test.passed << " tests\n"
-              << "Failed " << test.failed << " tests\n"
-              << "-------------------\n";
-
-    delete o1;
-    delete o2;
-    delete o3;
-
-    return 0;
-}
-
+#endif
 
 //g++ game_renderer_tests.cpp -Isdl2lib\include -Lsdl2lib\lib -w -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf -o gr_test

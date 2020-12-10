@@ -75,7 +75,6 @@ class GameRenderer {
         void remove(Object* object) {
             for (unsigned i = 0; i < gameObjects.size(); i++) {
                 if (gameObjects.at(i) == object) {
-
                     delete gameObjects.at(i);
                     gameObjects.erase(gameObjects.begin() + i);
                     return;

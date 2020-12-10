@@ -1,11 +1,65 @@
-#include "../Pong/Text.hpp"
+#ifndef __TEXTTESTS_H__
+#define __TEXTTESTS_H__
 
-class TextTests {
+#include "../Pong/Text.hpp"
+#include "tests.hpp"
+
+class TextTests : public Tests {
     private: 
+        Text* message;
         string err_msg = "";
     public:
-        int failed = 0;
-        int passed = 0;
+        virtual void run_tests() {
+            // constructors test
+            message = new Text("message");
+            constructor_tests(1, message, message->get_words(), message->get_size(), message->get_pos(), message->get_color_r(), message->get_color_g(), message->get_color_b(), message->get_color_a());
+            delete message;
+
+            message = new Text("message", 50);
+            constructor_tests(2, message, message->get_words(), message->get_size(), message->get_pos(), message->get_color_r(), message->get_color_g(), message->get_color_b(), message->get_color_a());
+            delete message;
+
+            message = new Text("message", 70, {76, 187, 223, 255});
+            constructor_tests(3, message, message->get_words(), message->get_size(), message->get_pos(), message->get_color_r(), message->get_color_g(), message->get_color_b(), message->get_color_a());
+            delete message;
+
+            message = new Text(to_string(10).c_str());
+            constructor_tests(4, message, message->get_words(), message->get_size(), message->get_pos(), message->get_color_r(), message->get_color_g(), message->get_color_b(), message->get_color_a());
+            delete message;
+
+            message = new Text(to_string(100).c_str(), 90, make_pair(0,0));
+            constructor_tests(5, message, message->get_words(), message->get_size(), message->get_pos(), message->get_color_r(), message->get_color_g(), message->get_color_b(), message->get_color_a());
+            delete message;
+
+
+            // functions test
+            message = new Text("message");
+            function_tests(message);
+            delete message;
+
+            message = new Text("message", 50);
+            function_tests(message);
+            delete message;
+
+            message = new Text("message", 70, {76, 187, 223, 255});
+            function_tests(message);
+            delete message;
+
+            message = new Text(to_string(10).c_str());
+            function_tests(message);
+            delete message;
+
+            message = new Text(to_string(100).c_str(), 90, make_pair(0,0));
+            function_tests(message);
+            delete message;
+
+            cout << "-------------------\n"
+                << "Passed " << passed << " tests\n"
+                << "Failed " << failed << " tests\n"
+                << "-------------------\n";
+
+            return;
+        }
 
         void constructor_tests(int num, Text* message, string words, int size, pair<int,int> pos, int r, int g, int b, int a) {
             if (message->get_words() != words) {
@@ -131,60 +185,9 @@ class TextTests {
             cout << endl;
             return;
         }
+
+        
 };
 
-int main(int argc, char * argv[]) {
-    TextTests test;
-    // constructors test
-    Text* message = new Text("message");
-    test.constructor_tests(1, message, message->get_words(), message->get_size(), message->get_pos(), message->get_color_r(), message->get_color_g(), message->get_color_b(), message->get_color_a());
-    delete message;
-
-    message = new Text("message", 50);
-    test.constructor_tests(2, message, message->get_words(), message->get_size(), message->get_pos(), message->get_color_r(), message->get_color_g(), message->get_color_b(), message->get_color_a());
-    delete message;
-
-    message = new Text("message", 70, {76, 187, 223, 255});
-    test.constructor_tests(3, message, message->get_words(), message->get_size(), message->get_pos(), message->get_color_r(), message->get_color_g(), message->get_color_b(), message->get_color_a());
-    delete message;
-
-    message = new Text(to_string(10).c_str());
-    test.constructor_tests(4, message, message->get_words(), message->get_size(), message->get_pos(), message->get_color_r(), message->get_color_g(), message->get_color_b(), message->get_color_a());
-    delete message;
-
-    message = new Text(to_string(100).c_str(), 90, make_pair(0,0));
-    test.constructor_tests(5, message, message->get_words(), message->get_size(), message->get_pos(), message->get_color_r(), message->get_color_g(), message->get_color_b(), message->get_color_a());
-    delete message;
-
-
-    // functions test
-    message = new Text("message");
-    test.function_tests(message);
-    delete message;
-
-    message = new Text("message", 50);
-    test.function_tests(message);
-    delete message;
-
-    message = new Text("message", 70, {76, 187, 223, 255});
-    test.function_tests(message);
-    delete message;
-
-    message = new Text(to_string(10).c_str());
-    test.function_tests(message);
-    delete message;
-
-    message = new Text(to_string(100).c_str(), 90, make_pair(0,0));
-    test.function_tests(message);
-    delete message;
-
-    cout << "-------------------\n"
-         << "Passed " << test.passed << " tests\n"
-         << "Failed " << test.failed << " tests\n"
-         << "-------------------\n";
-
-    return 0;
-}
-
-
+#endif
 //g++ text_tests.cpp -Isdl2lib\include -Lsdl2lib\lib -w -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf -o text_test
