@@ -16,9 +16,10 @@ int main(int argc, char * argv[]) {
     Tests* test;
     int tot_passed = 0;
     int tot_failed = 0;
-    SetColor(7);
-
+    
+    SetColor(14);
     cout << "Performing Ball Class Tests . . ." << endl << endl;
+    SetColor(7);
     test = new BallTests();
     test->run_tests();
     tot_passed += test->passed;
@@ -26,7 +27,9 @@ int main(int argc, char * argv[]) {
     delete test;
     cout << endl << "======================================================================================" << endl << endl;
 
+    SetColor(14);
     cout << "Performing Player Class Tests . . ." << endl << endl;
+    SetColor(7);
     test = new PlayerTests();
     test->run_tests();
     tot_passed += test->passed;
@@ -34,8 +37,9 @@ int main(int argc, char * argv[]) {
     delete test;
     cout << endl << "======================================================================================" << endl << endl;
 
-
+    SetColor(14);
     cout << "Performing Play Class Tests . . ." << endl << endl;
+    SetColor(7);
     test = new PlayTests();
     test->run_tests();
     tot_passed += test->passed;
@@ -43,7 +47,9 @@ int main(int argc, char * argv[]) {
     delete test;
     cout << endl << "======================================================================================" << endl << endl;
 
+    SetColor(14);
     cout << "Performing Train Class Tests . . ." << endl << endl;
+    SetColor(7);
     test = new TrainTests();
     test->run_tests();
     tot_passed += test->passed;
@@ -51,7 +57,9 @@ int main(int argc, char * argv[]) {
     delete test;
     cout << endl << "======================================================================================" << endl << endl;
 
+    SetColor(14);
     cout << "Performing Text Class Tests . . ." << endl << endl;
+    SetColor(7);
     test = new TextTests();
     test->run_tests();
     tot_passed += test->passed;
@@ -59,7 +67,9 @@ int main(int argc, char * argv[]) {
     delete test;
     cout << endl << "======================================================================================" << endl << endl;
 
+    SetColor(14);
     cout << "Performing GameRenderer Class Tests . . ." << endl << endl;
+    SetColor(7);
     test = new GRTests();
     test->run_tests();
     tot_passed += test->passed;
@@ -67,7 +77,9 @@ int main(int argc, char * argv[]) {
     delete test;
     cout << endl << "======================================================================================" << endl << endl;
 
+    SetColor(14);
     cout << "Performing AI Class Tests . . ." << endl << endl;
+    SetColor(7);
     test = new AITests();
     test->run_tests();
     tot_passed += test->passed;
@@ -75,7 +87,9 @@ int main(int argc, char * argv[]) {
     delete test;
     cout << endl << "======================================================================================" << endl << endl;
 
+    SetColor(14);
     cout << "Performing Matrix Class Tests . . ." << endl << endl;
+    SetColor(7);
     test = new MatrixTests();
     test->run_tests();
     tot_passed += test->passed;
@@ -83,7 +97,9 @@ int main(int argc, char * argv[]) {
     delete test;
     cout << endl << "======================================================================================" << endl << endl;
 
+    SetColor(14);
     cout << "Performing Sensor Class Tests . . ." << endl << endl;
+    SetColor(7);
     test = new SensorTests();
     test->run_tests();
     tot_passed += test->passed;
@@ -91,7 +107,9 @@ int main(int argc, char * argv[]) {
     delete test;
     cout << endl << "======================================================================================" << endl << endl;
 
+    SetColor(14);
     cout << "Performing Network Handler Class Tests . . ." << endl << endl;
+    SetColor(7);
     test = new NHTests();
     test->run_tests();
     tot_passed += test->passed;
@@ -99,7 +117,9 @@ int main(int argc, char * argv[]) {
     delete test;
     cout << endl << "======================================================================================" << endl << endl;
 
+    SetColor(14);
     cout << "Performing Neural_Network Class Tests . . ." << endl << endl;
+    SetColor(7);
     test = new NeuralNetworkTests();
     test->run_tests();
     tot_passed += test->passed;

@@ -138,6 +138,7 @@ char intro() {
 // Light Magenta|   13
 // Yellow       |   14
 // White        |   15
+
 void SetColor(int ForgC) {
     WORD wColor;
 
