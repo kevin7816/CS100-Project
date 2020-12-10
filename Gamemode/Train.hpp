@@ -2,8 +2,8 @@
 #define __TRAIN_HPP__
 
 #include <iostream>
-#include "SDL2/SDL.h"
-#include "SDL2/SDL_ttf.h"
+#include "../sdl2lib/include/SDL2/SDL.h"
+#include "../sdl2lib/include/SDL2/SDL_ttf.h"
 #include "Gamemode.hpp"
 #include "../Pong/Object.hpp"
 #include "../Pong/Controller.hpp"

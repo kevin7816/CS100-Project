@@ -6,6 +6,7 @@
 #include "Tests/ai_tests.hpp"
 #include "Tests/matrix_tests.hpp"
 #include "Tests/sensor_test.hpp"
+#include "Tests/network_handler_tests.hpp"
 
 
 int main(int argc, char * argv[]) {
@@ -13,13 +14,13 @@ int main(int argc, char * argv[]) {
     int tot_passed = 0;
     int tot_failed = 0;
 
-    cout << "Performing Play Class Tests . . ." << endl << endl;
-    test = new PlayTests();
-    test->run_tests();
-    tot_passed += test->passed;
-    tot_failed += test->failed;
-    delete test;
-    cout << endl << "======================================================================================" << endl << endl;
+    // cout << "Performing Play Class Tests . . ." << endl << endl;
+    // test = new PlayTests();
+    // test->run_tests();
+    // tot_passed += test->passed;
+    // tot_failed += test->failed;
+    // delete test;
+    // cout << endl << "======================================================================================" << endl << endl;
 
     cout << "Performing Train Class Tests . . ." << endl << endl;
     test = new TrainTests();
@@ -61,13 +62,21 @@ int main(int argc, char * argv[]) {
     delete test;
     cout << endl << "======================================================================================" << endl << endl;
 
-    // cout << "Performing Sensor Class Tests . . ." << endl << endl;
-    // test = new SensorTests();
-    // test->run_tests();
-    // tot_passed += test->passed;
-    // tot_failed += test->failed;
-    // delete test;
-    // cout << endl << "======================================================================================" << endl << endl;
+    cout << "Performing Sensor Class Tests . . ." << endl << endl;
+    test = new SensorTests();
+    test->run_tests();
+    tot_passed += test->passed;
+    tot_failed += test->failed;
+    delete test;
+    cout << endl << "======================================================================================" << endl << endl;
+
+    cout << "Performing Network Handler Class Tests . . ." << endl << endl;
+    test = new NHTests();
+    test->run_tests();
+    tot_passed += test->passed;
+    tot_failed += test->failed;
+    delete test;
+    cout << endl << "======================================================================================" << endl << endl;
 
     cout << "Total passed: " << tot_passed << endl;
     cout << "Total failed: " << tot_failed << endl;

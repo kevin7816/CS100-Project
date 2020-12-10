@@ -73,7 +73,6 @@ public:
         for (unsigned i = 0; i < nn->get_params().inputs; ++i) {
             if (movement[i]) {
                 ++total;
-                cout << total << endl;
             }
         }
         

@@ -35,7 +35,7 @@ public:
 private:
     void set_3_activations(Player* player, float* activations) {
         activations[0] = normalize(ball->getX(), 32, WIDTH - 32);
-        //cout << activations[0] << endl;
+        // cout << activations[0] << endl;
         activations[1] = normalize(ball->getY(), 0, HEIGHT);
         activations[2] = normalize(player->getY(), 0, HEIGHT);
     }
@@ -44,7 +44,8 @@ private:
         float x_guess = ball->getX();
         float y_guess = ball->getY();
         float velY = ball->getVelY();
-        //cout << ball->getVelX() << ' ' << ball->getX() << endl;
+        // cout << activations[0] << endl;
+        // cout << ball->getVelX() << ' ' << ball->getX() << endl;
         if (ball->getVelX() > 0 && ball->getX() < player->getX()) {
             while (x_guess < player->getX()) {
                 if (y_guess <= 0 || y_guess >= HEIGHT) {
@@ -53,7 +54,9 @@ private:
                 y_guess += velY;
                 x_guess += ball->getVelX();
             }
+            cout << activations[0] << endl;
             activations[0] = normalize(ball->getX(), 32, WIDTH - 32);
+            cout << activations[0] << endl;
             activations[1] = normalize(y_guess, 0, HEIGHT);
             activations[2] = normalize(player->getY(), 0, HEIGHT);
         }
