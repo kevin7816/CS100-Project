@@ -1,4 +1,6 @@
 #include "Tests/tests.hpp"
+#include "Tests/ball_tests.hpp"
+#include "Tests/player_tests.hpp"
 #include "Tests/play_tests.hpp"
 #include "Tests/train_tests.hpp"
 #include "Tests/text_tests.hpp"
@@ -14,6 +16,23 @@ int main(int argc, char * argv[]) {
     int tot_passed = 0;
     int tot_failed = 0;
     SetColor(7);
+
+    cout << "Performing Ball Class Tests . . ." << endl << endl;
+    test = new BallTests();
+    test->run_tests();
+    tot_passed += test->passed;
+    tot_failed += test->failed;
+    delete test;
+    cout << endl << "======================================================================================" << endl << endl;
+
+    cout << "Performing Player Class Tests . . ." << endl << endl;
+    test = new PlayerTests();
+    test->run_tests();
+    tot_passed += test->passed;
+    tot_failed += test->failed;
+    delete test;
+    cout << endl << "======================================================================================" << endl << endl;
+
 
     cout << "Performing Play Class Tests . . ." << endl << endl;
     test = new PlayTests();
