@@ -46,7 +46,9 @@ class Play : public Gamemode {
             left_paddle->randomize_color();
 
             // set up right user player
-            Controller* right_controller = new AI(new Sensor(ball), new NeuralNetwork("../saves/save_state_w1amn7x1h9/4_3_1_5_score4081_7g4ey57126"));
+            //Controller* right_controller = new AI(new Sensor(ball), new NeuralNetwork("../saves/save_state_w1amn7x1h9/4_3_1_5_score4081_7g4ey57126"));
+            Controller* right_controller = new AI(new Sensor(ball), new NeuralNetwork("../saves/save_state_92eqfsd939/3_3_1_5_score6184_a17f88g27w"));
+
             right_paddle = new Player(right_controller, WIDTH-32,(HEIGHT/2)-(HEIGHT/8),(HEIGHT/HEIGHT_RATIO),12);
             right_paddle->randomize_color();
 

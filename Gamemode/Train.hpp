@@ -35,7 +35,7 @@ private:
 public:
     Train(): Gamemode(), render_toggle(true) {
         Controller* left_controller = new User(SDL_SCANCODE_W, SDL_SCANCODE_S);
-        left_wall= new Player(left_controller, 32,(HEIGHT/2)-(HEIGHT/8),(HEIGHT),12);
+        left_wall= new Player(left_controller, 32,(HEIGHT/2)-(HEIGHT/8),(HEIGHT),22);
         gameRend.add(left_wall);
 
         NetworkParams params(INPUTS, OUTPUTS, HIDDEN_LAYERS, HIDDEN_LAYER_SIZE);
