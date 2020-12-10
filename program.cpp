@@ -67,11 +67,12 @@ string PlayInput() {
     cout << "\t4. Insane" << endl;
     SetColor(12); //red
     cout << "\t5. Literally Don't Even Try" << endl;
+    cout << "\t6. Don't Even Try Except It's Even Harder" << endl;
     SetColor(10); //green
     cout << "-----------------------------------------------------------------------" << endl;
     cout << endl;
     SetColor(7); //default color
-    cout << "Please select a gamemode, or if you want to play against a specific AI (1-5)," << endl;
+    cout << "Please select a difficulty, or if you want to play against a specific AI (1-5)," << endl;
     cout << "or input a file directory that is in the \'saves\' folder (example:" << endl;
     cout << "save_state_92eqfsd939/3_3_1_5_score6184_a17f88g27w):" << endl;
 

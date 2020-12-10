@@ -125,7 +125,7 @@ private:
             running = false;
         }
         if (keystates[SDL_SCANCODE_T]) {
-            cout << "pressed" << endl;
+            cout << "render toggled" << endl;
             render_toggle = !render_toggle;
             while (keystates[SDL_SCANCODE_T]) {
                 while(SDL_PollEvent(&e));
