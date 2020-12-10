@@ -100,8 +100,8 @@ class Play : public Gamemode {
     private:
         void serve(bool &turn){
             // cout scores in a new serve
-            cout << "Player LEFT: " << score_left << endl;
-            cout << "Player RIGHT: " << score_right << endl << endl;
+            // cout << "Player LEFT: " << score_left << endl;
+            // cout << "Player RIGHT: " << score_right << endl << endl;
 
             if(turn) { // turn == 1 == left's turn to serve
                 left_paddle->setY((HEIGHT/2) - (left_paddle->getH())/2); //sets the paddles in place

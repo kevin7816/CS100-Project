@@ -41,11 +41,25 @@ class GameRenderer {
             return;
         }
         void render_all(SDL_Renderer * renderer, int frameCount, int timerFPS, int lastFrame, vector<Object*> objects) {
-            render_all(renderer, frameCount, timerFPS, lastFrame);
+            SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);     //renders black screen
+            SDL_RenderClear(renderer);
+
+            for(unsigned i = 0; i < gameObjects.size(); i++){
+                gameObjects.at(i)->show(renderer);
+            }
+
             for (unsigned i = 0; i < objects.size(); ++i) {
                 objects.at(i)->show(renderer);
             }
             objects.clear();
+            
+            SDL_RenderPresent(renderer);                    // update screen all at once to prevent flickering
+
+            frameCount++;                                   // implements frame cap
+            timerFPS = SDL_GetTicks()-lastFrame;
+            if(timerFPS<(1000/60)) {
+                SDL_Delay((1000/60)-timerFPS);              // SDL_Delay() should go after SDL_RenderPresent() for for smoother moves
+            }
         }
   
         void add(Object* object) {
@@ -61,7 +75,6 @@ class GameRenderer {
         void remove(Object* object) {
             for (unsigned i = 0; i < gameObjects.size(); i++) {
                 if (gameObjects.at(i) == object) {
-                    
                     delete gameObjects.at(i);
                     gameObjects.erase(gameObjects.begin() + i);
                     return;

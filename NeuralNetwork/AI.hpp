@@ -8,7 +8,8 @@
 #include "../definitions.hpp"
 
 
-class AI: public Controller {
+class AI : public Controller {
+friend class AITests;
 private:
     Sensor* sensor;
     NeuralNetwork* nn;
@@ -46,9 +47,9 @@ public:
     }
 
     ~AI() {
-        delete sensor;
-        delete nn;
-        delete [] movement;
+        if(!sensor) delete sensor;
+        if(!nn) delete nn;
+        if(!movement) delete [] movement;
     }
 
     virtual NeuralNetwork* getNetwork() {
@@ -61,8 +62,10 @@ public:
         for (unsigned i = 0; i < nn->get_params().inputs; ++i) {
             if (movement[i]) {
                 ++total;
+                cout << total << endl;
             }
         }
+        
         return total;
     }
 
